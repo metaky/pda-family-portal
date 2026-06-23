@@ -1,3 +1,26 @@
+import {
+  buildTranslationPrompt as buildSourceTranslationPrompt,
+  buildVariationPrompt as buildSourceVariationPrompt,
+  systemInstruction as sourceSystemInstruction,
+} from "./declarative-prompt";
+
+const sourceTranslationPrompt = buildSourceTranslationPrompt as (request: {
+  existingTranslations?: Translation[];
+  interest?: string;
+  text: string;
+  tone?: TranslatorTone;
+  useFewerWords?: boolean;
+}) => string;
+
+const sourceVariationPrompt = buildSourceVariationPrompt as (request: {
+  interest?: string;
+  sourceTranslation: string;
+  text: string;
+  tone?: TranslatorTone;
+  useFewerWords?: boolean;
+  variationKind?: VariationKind;
+}) => string;
+
 export type TranslatorMode = "translate" | "moreIdeas" | "variation";
 
 export type TranslatorTone =
@@ -111,16 +134,7 @@ const SUMMARY_STOP_WORDS = new Set([
 
 const ANGLE_ORDER = ["setup", "transition", "logistics", "shared"];
 
-export const translatorSystemInstruction = `You are an AI assistant named "Declarative," designed as a co-regulation tool for parents and caregivers of children with a Pathological Demand Avoidance (PDA) profile. Your primary job is to turn caregiver demands into real, sayable, low-pressure language.
-
-Quality order:
-1. Real caregiver speech: Every suggestion should sound like something a calm adult could actually say to a child in the moment.
-2. Felt safety and autonomy: Reduce pressure without manipulating, shaming, cornering, bargaining, praise-pressuring, or hiding a command inside a fake observation.
-3. Full practical meaning: Keep the action, safety concern, location, sequence, and destination when they matter.
-4. Tone behavior: Match the selected tone as a strategy, not as decorative flavor.
-5. Brevity: Short is good only when it stays complete and usable.
-
-Your output must be a valid JSON array of objects.`;
+export const translatorSystemInstruction = sourceSystemInstruction;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -443,57 +457,24 @@ function buildFewerWordsInstruction(text: string, tone?: TranslatorTone, interes
 }
 
 export function buildDeclarativePrompt(request: TranslatorRequest) {
-  const toneInstruction = getToneInstruction(request.tone, request.interest);
-  const contextInstruction = buildContextInstruction(request.text, request.tone, request.interest);
-  const lengthInstruction = request.useFewerWords
-    ? buildFewerWordsInstruction(request.text, request.tone, request.interest)
-    : "";
-  const followUpCoverage = buildFollowUpCoverage(request.existingTranslations);
-  const followUpInstruction = request.existingTranslations?.length
-    ? `\nCovered angles: ${followUpCoverage.usedAngles}. Used openings: ${followUpCoverage.openingPatterns.join("; ")}. Underused angles to lean on next: ${followUpCoverage.underusedAngles}. Write 3-4 genuinely new alternatives. Treat those angles, openings, and sentence shapes as used.`
-    : "";
-
-  return `Rewrite into 3-4 declarative alternatives that preserve full meaning while reducing pressure: "${request.text}". Address all parts.${contextInstruction} Tone: ${toneInstruction}${lengthInstruction}
-
-Privately draft more candidates than you need, then return only the best 3-4. Keep the winners varied. A winning set should include at least 1-2 options a real caregiver could use immediately. Reject candidates that sound like rules, vague captions, hidden commands, gimmicks, emotional pressure, generic AI phrasing, or tone-mismatched filler. If the tone is Interest Based and an interest was entered, reject every candidate that does not use the interest or a recognizable element from it in a way that logically connects to the task. Return only the JSON array.${followUpInstruction}`;
+  return sourceTranslationPrompt({
+    existingTranslations: request.existingTranslations ?? [],
+    interest: request.interest,
+    text: request.text,
+    tone: request.tone,
+    useFewerWords: request.useFewerWords,
+  });
 }
 
 export function buildVariationPrompt(request: TranslatorRequest) {
-  const toneInstruction = getToneInstruction(request.tone, request.interest);
-  const contextInstruction = buildContextInstruction(request.text, request.tone, request.interest);
-  const variationInstructions: Record<VariationKind, string> = {
-    longer:
-      'Variation direction: "Longer". Make both rewrites a little fuller and smoother than the source suggestion. Add only enough context or connective tissue to improve flow.',
-    more_playful:
-      'Variation direction: "More playful". Make both rewrites a little lighter in rhythm or wording while staying grounded and easy to say out loud.',
-    more_straightforward:
-      'Variation direction: "More straightforward". Make both rewrites plainer, calmer, and more direct than the source suggestion without becoming command-like.',
-    shorter:
-      'Variation direction: "Shorter". Preserve core meaning: action, safety, location, sequence, destination. Compact the same source angle.',
-    warmer:
-      'Variation direction: "Warmer". Make both rewrites slightly softer and more connecting than the source suggestion. Keep them grounded and low-pressure.',
-  };
-  const variationKind = request.variationKind ?? "warmer";
-  const lengthInstruction = request.useFewerWords
-    ? 'Respect the existing "Fewer Words" preference unless the chosen variation direction is "Longer", in which case slightly fuller wording is allowed while staying compact.'
-    : "";
-
-  return `Refine one existing declarative suggestion into exactly 2 new declarative rewrites.
-
-Original caregiver request: "${request.text}"${contextInstruction}
-Selected source suggestion: "${request.sourceTranslation?.translation}"
-Tone: ${toneInstruction}
-${variationInstructions[variationKind]}
-${lengthInstruction}
-
-Requirements:
-- Preserve the full meaning of the original caregiver request.
-- Stay anchored to the selected source suggestion unless that source is weak, vague, or rule-like.
-- Make the 2 rewrites meaningfully different from each other in opening words and sentence shape.
-- Keep both rewrites authentic and useful in a real caregiver moment.
-- Do not drop important parts of the request.
-
-Return only the valid JSON array.`;
+  return sourceVariationPrompt({
+    interest: request.interest,
+    sourceTranslation: request.sourceTranslation?.translation ?? "",
+    text: request.text,
+    tone: request.tone,
+    useFewerWords: request.useFewerWords,
+    variationKind: request.variationKind ?? "warmer",
+  });
 }
 
 function cleanTaskText(text: string) {

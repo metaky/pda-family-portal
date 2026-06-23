@@ -1,10 +1,37 @@
 import { describe, expect, it } from "vitest";
+import { pathToFileURL } from "node:url";
 import {
   buildDeclarativePrompt,
   buildVariationPrompt,
   normalizeTranslations,
+  translatorSystemInstruction,
   validateTranslatorRequest,
 } from "../src/lib/declarative-translator";
+
+async function loadSourcePromptModule() {
+  return import(
+    pathToFileURL(
+      "/Users/kyle.wegner/Dev Projects/declarative/services/translationPrompt.js",
+    ).href
+  ) as Promise<{
+    buildTranslationPrompt: (request: {
+      existingTranslations?: Array<{ translation: string }>;
+      interest?: string;
+      text: string;
+      tone?: string;
+      useFewerWords?: boolean;
+    }) => string;
+    buildVariationPrompt: (request: {
+      interest?: string;
+      sourceTranslation: string;
+      text: string;
+      tone?: string;
+      useFewerWords?: boolean;
+      variationKind?: string;
+    }) => string;
+    systemInstruction: string;
+  }>;
+}
 
 describe("declarative translator contract", () => {
   it("builds prompts that preserve source tone and safety guardrails", () => {
@@ -88,9 +115,57 @@ describe("declarative translator contract", () => {
 
     expect(dinnerPrompt).toContain("Bad shapes");
     expect(dinnerPrompt).toContain("Pokemon hand wash");
-    expect(dinnerPrompt).toContain("Pikachu-speed");
+    expect(dinnerPrompt).toContain("Pikachu/speed");
     expect(cleanupPrompt).toContain("do not use Poke-stop");
-    expect(cleanupPrompt).toContain("Do not rename real toys as Pokemon");
-    expect(cleanupPrompt).toContain('Do not say "these Pokemon,"');
+    expect(cleanupPrompt).toContain("Pokemon toys");
+    expect(cleanupPrompt).toContain("Toys to the Poke-stop upstairs");
+  });
+
+  it("matches the existing Declarative app master prompt exactly", async () => {
+    const sourcePrompt = await loadSourcePromptModule();
+
+    expect(translatorSystemInstruction).toBe(sourcePrompt.systemInstruction);
+  });
+
+  it("matches the existing Declarative app translation prompt for tone, fewer words, and follow-up behavior", async () => {
+    const sourcePrompt = await loadSourcePromptModule();
+    const request = {
+      existingTranslations: [
+        { translation: "The car is ready, and shoes are part of getting out the door." },
+        { translation: "It looks like shoes and heading to the car are the next part." },
+      ],
+      interest: "Pokemon",
+      mode: "moreIdeas" as const,
+      text: "Please come down and wash your hands. It's dinner time.",
+      tone: "Interest Based" as const,
+      useFewerWords: true,
+    };
+
+    expect(buildDeclarativePrompt(request)).toBe(
+      sourcePrompt.buildTranslationPrompt(request),
+    );
+  });
+
+  it("matches the existing Declarative app variation prompt for tone and fewer words behavior", async () => {
+    const sourcePrompt = await loadSourcePromptModule();
+    const request = {
+      interest: "Dinosaurs",
+      mode: "variation" as const,
+      sourceTranslation: {
+        translation:
+          "The bathroom is the next dinosaur stop, and bedtime still has room for teeth plus a dinosaur companion.",
+      },
+      text: "Please come to the bathroom, brush your teeth, and bring your dinosaur to bed.",
+      tone: "Interest Based" as const,
+      useFewerWords: false,
+      variationKind: "warmer" as const,
+    };
+
+    expect(buildVariationPrompt(request)).toBe(
+      sourcePrompt.buildVariationPrompt({
+        ...request,
+        sourceTranslation: request.sourceTranslation.translation,
+      }),
+    );
   });
 });

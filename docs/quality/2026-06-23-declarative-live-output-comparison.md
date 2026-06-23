@@ -79,3 +79,21 @@ Residual watchlist:
 ## Decision
 
 Mark the Phase 4 live comparison task complete for the MVP. Do not claim full production parity yet. Before public launch, run the full source eval suite and consider porting the remaining source evaluator scripts so regressions can be scored more systematically.
+
+## Follow-Up: Source Prompt Parity
+
+After review, the adapted portal prompt was replaced with a source-faithful port of `/Users/kyle.wegner/Dev Projects/declarative/services/translationPrompt.js` in `src/lib/declarative-prompt.ts`.
+
+Added parity tests that assert:
+
+- The portal master/system prompt exactly matches the existing Declarative app.
+- The portal translation prompt exactly matches the existing Declarative app for tone, Fewer Words, and follow-up behavior.
+- The portal variation prompt exactly matches the existing Declarative app for tone and Fewer Words behavior.
+
+Post-parity live spot check:
+
+- Pokemon dinner Fewer Words
+- Pokemon cleanup standard
+- Pokemon cleanup Fewer Words
+
+Result: portal-specific prompt drift is resolved. Any remaining qualitative tuning should happen in the shared/source prompt behavior rather than in a portal-specific adaptation.
