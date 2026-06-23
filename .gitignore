@@ -26,6 +26,8 @@ pnpm-debug.log*
 
 # local browser/test artifacts
 .playwright-mcp/
+.playwright-cli/
+output/playwright/
 playwright-report/
 test-results/
 *.tsbuildinfo

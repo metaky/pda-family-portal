@@ -43,6 +43,130 @@ Use browser QA for user-facing changes:
 - Confirm no clipped or unreadable text in primary workflows.
 - Confirm donation prompts appear only after value is delivered.
 
+## Tool and Skill Routing
+
+Use the right tool for the confidence level needed. A passing build is not enough for user-facing portal work.
+
+### Planning and Implementation Discipline
+
+- Use `superpowers:writing-plans` before starting a multi-step phase or migration.
+- Use `superpowers:test-driven-development` for feature and bugfix work. Write the failing test first, verify it fails for the right reason, then implement.
+- Use the PRD for product direction and this file for execution tracking.
+- Update this file when a task is completed, newly discovered, split, or deliberately deferred.
+
+### Unit and Service Tests
+
+Use Vitest for deterministic logic:
+
+- Template generation in `src/lib/support-sheet.ts`.
+- Migration inventory logic.
+- API response shaping once AI/upload routes are ported.
+- Privacy guardrails that can be tested without a browser.
+
+Commands:
+
+```bash
+npm test
+```
+
+### Checked-In Playwright Tests
+
+Use checked-in Playwright specs when a browser flow should become a permanent regression guard.
+
+Add this during Phase 2 before launch hardening:
+
+- `@playwright/test` as a dev dependency.
+- `playwright.config.ts`.
+- `tests/e2e/support-sheet-builder.spec.ts`.
+- `npm run test:e2e`.
+
+Good candidates for checked-in tests:
+
+- Support Sheet Builder happy path: choose audience, edit fields, generate, switch output tabs.
+- Donation prompt absent before generation and present after generation.
+- Email and short text copy buttons show success feedback.
+- Mobile viewport has no horizontal overflow.
+- Migrated upload flows reject invalid files and accept valid fixtures.
+
+Do not replace unit tests with browser tests. Use browser tests for user flows, not template string minutiae.
+
+### `$playwright` and `$playwright-cli`
+
+Use `$playwright` / `$playwright-cli` for quick real-browser checks from the terminal:
+
+- Smoke-test a route after a change.
+- Fill a form once and inspect the visible result.
+- Take snapshots before using element refs.
+- Capture console or network output while debugging.
+- Save a screenshot or trace for temporary QA evidence.
+
+Prerequisite:
+
+```bash
+command -v npx >/dev/null 2>&1
+```
+
+Preferred wrapper:
+
+```bash
+export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+export PWCLI="$CODEX_HOME/skills/playwright/scripts/playwright_cli.sh"
+"$PWCLI" open http://127.0.0.1:3000 --headed
+"$PWCLI" snapshot
+```
+
+Session hygiene:
+
+- Run browser commands serially.
+- Open or confirm the session before navigating.
+- Re-snapshot after navigation or UI-changing actions.
+- Store temporary screenshots/traces under `output/playwright/`.
+- Do not commit Playwright artifacts unless a task explicitly asks for a durable artifact.
+
+### `$playwright-interactive`
+
+Use `$playwright-interactive` for iterative UI work where visual quality matters:
+
+- Layout changes to the portal shell, tool pages, preview pane, print layout, or mobile behavior.
+- Debugging clipping, overflow, z-index, focus, console errors, or responsive issues.
+- Multi-step QA where keeping the same browser/session saves time.
+- Before signing off on a visually meaningful feature.
+
+Required QA inventory before signoff:
+
+- User-visible claims being made.
+- Controls and modes changed or introduced.
+- Expected state changes for each control.
+- Desktop and mobile visual checks.
+- At least two off-happy-path checks.
+
+Required signoff checks:
+
+- Functional path with normal user input.
+- Separate visual QA pass.
+- Viewport fit check, including no horizontal overflow.
+- Screenshot review for the state being signed off.
+- Short exploratory pass after scripted checks.
+
+### Frontend Testing Debugging Skill
+
+Use `build-web-apps:frontend-testing-debugging` for rendered frontend fixes or QA-heavy UI changes. It should define the target flow, validate page identity, check console health, prove at least one interaction, and inspect desktop plus mobile when practical.
+
+### Security and Privacy Tools
+
+Use security-focused review before and after porting upload or AI-backed routes:
+
+- Use `security-best-practices` or `codex-security:security-scan` for upload/API migrations.
+- Use `codex-security:threat-model` before public launch of PDA IEP Advice or PDA Behavior Report Help.
+- Confirm analytics never captures child names, school names, document text, typed phrases, generated output, or form answers.
+
+### Deployment and External-Service Tools
+
+- Use `sites:sites-building` / `sites:sites-hosting` only if this project becomes attached to Sites or gets a `.openai/hosting.json`.
+- Use `github:*` skills/tools if the project moves to GitHub PRs or CI checks.
+- Use `openai-docs` only if a future phase changes model/API providers to OpenAI products.
+- Use official provider docs when changing Gemini, Next.js, security, upload, or deployment behavior.
+
 ## Phase 0: Baseline Repository
 
 Goal: Make the project safe to continue in repeatable Codex sessions.
@@ -113,6 +237,7 @@ Quality tasks:
 - [ ] Add custom free-text fields for each section, not only one general note.
 - [ ] Add a visible "copy email" and "copy short text" success state that is easy to notice on mobile.
 - [ ] Add a print-specific QA pass for one-page output length at common paper sizes.
+- [ ] Add checked-in Playwright e2e setup: `@playwright/test`, `playwright.config.ts`, `tests/e2e/support-sheet-builder.spec.ts`, and `npm run test:e2e`.
 - [ ] Add browser tests for the complete builder flow.
 - [ ] Add tests that verify no Support Sheet Builder API route or server persistence is used.
 - [ ] Add sample input presets for a teacher, grandparent, babysitter, dentist, and coach.
@@ -121,8 +246,11 @@ Verification:
 
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run test:e2e` once the checked-in Playwright harness exists.
 - [ ] Desktop browser: generate support sheet, edit preview text, switch to email, switch to short text.
 - [ ] Mobile browser: generate support sheet and confirm no horizontal overflow.
+- [ ] Use `$playwright-interactive` for final desktop and mobile visual QA when layout, print preview, or output editing changes.
+- [ ] Use `$playwright-cli` for quick route smoke checks or trace/screenshot capture during debugging.
 - [ ] Print preview: confirm output is readable and suitable for one page or a clearly acceptable print flow.
 - [ ] Copy email: paste into a plain text field and confirm it is readable without formatting.
 - [ ] Copy short text: confirm it is short enough for a normal message.
@@ -146,7 +274,10 @@ Verification:
 
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run test:e2e` once the checked-in Playwright harness exists.
 - [ ] Browser check each example route.
+- [ ] Use `$playwright-cli` snapshots for route smoke checks.
+- [ ] Use `$playwright-interactive` if examples introduce new layout patterns or visual states.
 - [ ] Confirm examples contain no real child data.
 - [ ] Confirm example pages make value clear without requiring form entry.
 - [ ] Confirm share/footer copy can be removed or edited by the parent.
@@ -194,10 +325,13 @@ Verification:
 
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run test:e2e` once translator e2e coverage exists.
 - [ ] Browser check short parent phrase translation.
 - [ ] Browser check tone/variation controls.
 - [ ] Browser check copy-to-clipboard.
 - [ ] Browser check loading, error, and empty states.
+- [ ] Use `$playwright-cli` for quick snapshots and console/network inspection during migration.
+- [ ] Use `$playwright-interactive` for final visual QA of the migrated translator route.
 - [ ] Compare output quality against existing Declarative App examples/evals.
 - [ ] Confirm no sensitive typed/generated text is sent to analytics.
 
@@ -252,11 +386,15 @@ Verification:
 - [ ] `npm test`
 - [ ] `npm run build`
 - [ ] Port or rewrite relevant Playwright tests from Antigravity.
+- [ ] `npm run test:e2e` once analyzer e2e coverage exists.
 - [ ] Browser check valid PDF upload.
 - [ ] Browser check invalid file rejection.
 - [ ] Browser check analyzer output is printable/readable.
 - [ ] Browser check accommodations route.
 - [ ] Browser check guide route.
+- [ ] Use `$playwright-cli` for upload smoke checks with fixtures and console/network inspection.
+- [ ] Use `$playwright-interactive` for final analyzer, accommodations, guide, desktop, and mobile visual QA.
+- [ ] Run security-focused review before public exposure of upload/API behavior.
 - [ ] Confirm uploaded document content is not captured in analytics.
 - [ ] Confirm privacy stance is at least as strong as the source app.
 
@@ -301,9 +439,13 @@ Verification:
 - [ ] `npm test`
 - [ ] `npm run build`
 - [ ] Port or rewrite `tests/behavior-report.spec.ts`.
+- [ ] `npm run test:e2e` once behavior report e2e coverage exists.
 - [ ] Browser check valid behavior report plus IEP/504 upload.
 - [ ] Browser check invalid file rejection.
 - [ ] Browser check generated output is readable and printable.
+- [ ] Use `$playwright-cli` for upload smoke checks with fixtures and console/network inspection.
+- [ ] Use `$playwright-interactive` for final behavior report desktop and mobile visual QA.
+- [ ] Run security-focused review before public exposure of upload/API behavior.
 - [ ] Confirm this feature is not nested under PDA IEP Advice in navigation.
 - [ ] Confirm uploaded document content is not captured in analytics.
 
@@ -329,7 +471,11 @@ Verification:
 
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run test:e2e` once checked-in Playwright coverage exists.
 - [ ] Browser check production deployment.
+- [ ] Use `$playwright-cli` for production route smoke checks, console/network checks, and redirect validation.
+- [ ] Use `$playwright-interactive` for final launch visual QA on desktop and mobile.
+- [ ] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - [ ] Check canonical URLs in page metadata.
 - [ ] Check old URLs route to bridge or redirect pages when ready.
 - [ ] Confirm analytics payloads are privacy-safe.
@@ -350,7 +496,9 @@ Verification:
 
 - [ ] `npm test`
 - [ ] `npm run build`
+- [ ] `npm run test:e2e` when personalization affects browser behavior.
 - [ ] Browser check local-only behavior.
+- [ ] Use `$playwright-interactive` for local-storage/privacy-state QA when local-only saving is added.
 - [ ] Confirm no server-side Support Sheet Builder storage was introduced.
 - [ ] Confirm new personalization options do not make the first useful output slower or more demanding.
 
