@@ -233,28 +233,28 @@ Goal: Make the first complete version of the new tool useful enough for a parent
 
 Quality tasks:
 
-- [ ] Improve audience-specific wording so teacher, family, childcare, activity, and medical outputs differ more meaningfully.
-- [ ] Add custom free-text fields for each section, not only one general note.
-- [ ] Add a visible "copy email" and "copy short text" success state that is easy to notice on mobile.
+- [x] Improve audience-specific wording so teacher, family, childcare, activity, and medical outputs differ more meaningfully.
+- [x] Add custom free-text fields for each section, not only one general note.
+- [x] Add a visible "copy email" and "copy short text" success state that is easy to notice on mobile.
 - [ ] Add a print-specific QA pass for one-page output length at common paper sizes.
-- [ ] Add checked-in Playwright e2e setup: `@playwright/test`, `playwright.config.ts`, `tests/e2e/support-sheet-builder.spec.ts`, and `npm run test:e2e`.
-- [ ] Add browser tests for the complete builder flow.
-- [ ] Add tests that verify no Support Sheet Builder API route or server persistence is used.
-- [ ] Add sample input presets for a teacher, grandparent, babysitter, dentist, and coach.
+- [x] Add checked-in Playwright e2e setup: `@playwright/test`, `playwright.config.ts`, `tests/e2e/support-sheet-builder.spec.ts`, and `npm run test:e2e`.
+- [x] Add browser tests for the complete builder flow.
+- [x] Add tests that verify no Support Sheet Builder API route or server persistence is used.
+- [x] Add sample input presets for a teacher, grandparent, babysitter, dentist, and coach.
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e` once the checked-in Playwright harness exists.
-- [ ] Desktop browser: generate support sheet, edit preview text, switch to email, switch to short text.
-- [ ] Mobile browser: generate support sheet and confirm no horizontal overflow.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] `npm run test:e2e` once the checked-in Playwright harness exists.
+- [x] Desktop browser: generate support sheet, edit preview text, switch to email, switch to short text.
+- [x] Mobile browser: generate support sheet and confirm no horizontal overflow.
 - [ ] Use `$playwright-interactive` for final desktop and mobile visual QA when layout, print preview, or output editing changes.
 - [ ] Use `$playwright-cli` for quick route smoke checks or trace/screenshot capture during debugging.
 - [ ] Print preview: confirm output is readable and suitable for one page or a clearly acceptable print flow.
-- [ ] Copy email: paste into a plain text field and confirm it is readable without formatting.
-- [ ] Copy short text: confirm it is short enough for a normal message.
-- [ ] Confirm donation prompt is absent before generation and present after generation.
+- [x] Copy email: paste into a plain text field and confirm it is readable without formatting.
+- [x] Copy short text: confirm it is short enough for a normal message.
+- [x] Confirm donation prompt is absent before generation and present after generation.
 
 ## Phase 3: Public Examples and Organic Sharing
 

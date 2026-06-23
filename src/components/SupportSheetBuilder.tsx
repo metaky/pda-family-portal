@@ -21,10 +21,12 @@ import {
   escalationOptions,
   helpOptions,
   recoveryOptions,
+  supportSheetPresets,
   type AudienceKey,
   type EditableSupportSheetDraft,
   type OptionItem,
   type SupportSheetAnswers,
+  type SupportSheetSectionKey,
 } from "@/lib/support-sheet";
 import { audienceQuickStarts } from "@/lib/tools";
 
@@ -37,6 +39,43 @@ type ArrayField =
   | "recovery";
 
 type OutputTab = "sheet" | "email" | "short";
+
+const sectionNoteFields: Array<{
+  key: SupportSheetSectionKey;
+  label: string;
+  placeholder: string;
+}> = [
+  {
+    key: "helps",
+    label: "Extra detail for what helps",
+    placeholder: "Example: A drawing pad helps during waiting time.",
+  },
+  {
+    key: "demands",
+    label: "Extra detail for pressure points",
+    placeholder: "Example: Questions before transitions can pile up quickly.",
+  },
+  {
+    key: "distressSigns",
+    label: "Extra detail for early signs",
+    placeholder: "Example: Complaints about noise are often the first clue.",
+  },
+  {
+    key: "avoid",
+    label: "Extra detail for what to avoid",
+    placeholder: "Example: Please do not remove the comfort item unless safety requires it.",
+  },
+  {
+    key: "escalationPlan",
+    label: "Extra detail for escalation",
+    placeholder: "Example: If they leave, stay nearby but do not follow closely.",
+  },
+  {
+    key: "recovery",
+    label: "Extra detail for recovery",
+    placeholder: "Example: Reconnecting through a preferred topic works better than a debrief.",
+  },
+];
 
 function estimateRows(items: string[]) {
   return Math.max(
@@ -110,6 +149,16 @@ export function SupportSheetBuilder() {
     }));
   }
 
+  function updateSectionNote(key: SupportSheetSectionKey, value: string) {
+    setAnswers((current) => ({
+      ...current,
+      sectionNotes: {
+        ...current.sectionNotes,
+        [key]: value,
+      },
+    }));
+  }
+
   function toggleArrayValue(field: ArrayField, id: string) {
     setAnswers((current) => {
       const selected = current[field];
@@ -131,6 +180,19 @@ export function SupportSheetBuilder() {
   function reset() {
     setAnswers(defaultAnswers);
     setDraft(createInitialSupportSheetDraft(defaultAnswers));
+    setGenerated(false);
+    setActiveTab("sheet");
+    setCopied(null);
+  }
+
+  function loadPreset(index: number) {
+    const preset = supportSheetPresets[index];
+    if (!preset) {
+      return;
+    }
+
+    setAnswers(preset.answers);
+    setDraft(createInitialSupportSheetDraft(preset.answers));
     setGenerated(false);
     setActiveTab("sheet");
     setCopied(null);
@@ -201,6 +263,23 @@ export function SupportSheetBuilder() {
             <p className="small-copy" style={{ margin: 0 }}>
               {audienceQuickStarts[answers.audience]}
             </p>
+          </div>
+
+          <div className="field">
+            <div className="group-label">Sample starters</div>
+            <div className="preset-grid">
+              {supportSheetPresets.map((preset, index) => (
+                <button
+                  className="preset-button"
+                  key={preset.label}
+                  onClick={() => loadPreset(index)}
+                  type="button"
+                >
+                  <strong>{preset.label}</strong>
+                  <span>{preset.description}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="field-grid">
@@ -282,6 +361,25 @@ export function SupportSheetBuilder() {
             selected={answers.recovery}
           />
 
+          <div className="field">
+            <div className="group-label">Optional section details</div>
+            <p className="small-copy" style={{ margin: 0 }}>
+              Add one specific note to any section that needs more context.
+            </p>
+            <div className="section-note-grid">
+              {sectionNoteFields.map((field) => (
+                <label className="field" key={field.key}>
+                  <span>{field.label}</span>
+                  <textarea
+                    onChange={(event) => updateSectionNote(field.key, event.target.value)}
+                    placeholder={field.placeholder}
+                    value={answers.sectionNotes[field.key] ?? ""}
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+
           <label className="field">
             <span>Parent / caregiver note</span>
             <textarea
@@ -321,22 +419,28 @@ export function SupportSheetBuilder() {
         <div className="sheet-toolbar no-print">
           <div className="tabs" role="tablist" aria-label="Generated outputs">
             <button
+              aria-selected={activeTab === "sheet"}
               className={`tab ${activeTab === "sheet" ? "active" : ""}`}
               onClick={() => setActiveTab("sheet")}
+              role="tab"
               type="button"
             >
               One-page sheet
             </button>
             <button
+              aria-selected={activeTab === "email"}
               className={`tab ${activeTab === "email" ? "active" : ""}`}
               onClick={() => setActiveTab("email")}
+              role="tab"
               type="button"
             >
               Email
             </button>
             <button
+              aria-selected={activeTab === "short"}
               className={`tab ${activeTab === "short" ? "active" : ""}`}
               onClick={() => setActiveTab("short")}
+              role="tab"
               type="button"
             >
               Short text
@@ -358,10 +462,16 @@ export function SupportSheetBuilder() {
               }
               type="button"
             >
-              <Clipboard size={16} /> {copied === activeTab ? "Copied" : "Copy"}
+              <Clipboard size={16} /> {copied === activeTab ? `Copied ${activeTab}` : "Copy"}
             </button>
           </div>
         </div>
+
+        {copied ? (
+          <div className="copy-confirmation no-print" role="status" aria-live="polite">
+            Copied {copied === "short" ? "short text" : copied} to your clipboard.
+          </div>
+        ) : null}
 
         {!generated ? (
           <div className="notice no-print" style={{ marginBottom: 16 }}>
@@ -391,8 +501,8 @@ export function SupportSheetBuilder() {
                   aria-label="Support sheet subtitle"
                   className="edit-area no-print"
                   onChange={(event) => updateSheetText("subtitle", event.target.value)}
-                  rows={2}
-                  style={{ minHeight: 56, marginTop: 8 }}
+                  rows={3}
+                  style={{ minHeight: 84, marginTop: 8 }}
                   value={draft.sheet.subtitle}
                 />
                 <p className="print-only-subtitle">{draft.sheet.subtitle}</p>

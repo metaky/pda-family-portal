@@ -25,12 +25,24 @@ export type SupportSheetAnswers = {
   recovery: string[];
   contactNote: string;
   customNotes: string;
+  sectionNotes: Partial<Record<SupportSheetSectionKey, string>>;
 };
+
+export type SupportSheetSectionKey =
+  | "about"
+  | "helps"
+  | "demands"
+  | "distressSigns"
+  | "avoid"
+  | "escalationPlan"
+  | "recovery"
+  | "contactNote";
 
 export type OptionItem = {
   id: string;
   label: string;
   phrase: string;
+  audiencePhrases?: Partial<Record<AudienceKey, string>>;
 };
 
 export type AudienceOption = {
@@ -65,6 +77,13 @@ export type SupportSheetOutputs = {
 
 export type EditableSupportSheetDraft = SupportSheetOutputs & {
   updatedAt: string;
+};
+
+export type SupportSheetPreset = {
+  audience: Exclude<AudienceKey, "substitute" | "custom">;
+  label: string;
+  description: string;
+  answers: SupportSheetAnswers;
 };
 
 export const audienceOptions: AudienceOption[] = [
@@ -128,12 +147,31 @@ export const audienceOptions: AudienceOption[] = [
 
 export const helpOptions: OptionItem[] = [
   { id: "extra_processing_time", label: "Extra processing time", phrase: "extra processing time before answering or shifting tasks" },
-  { id: "choices", label: "Choices", phrase: "real choices that protect a sense of autonomy" },
+  {
+    id: "choices",
+    label: "Choices",
+    phrase: "real choices that protect a sense of autonomy",
+    audiencePhrases: {
+      medical: "clear choices, consent checks, and permission to pause during appointments or procedures",
+      relative: "choices that make family time feel collaborative instead of like a test of obedience",
+      childcare: "simple choices that keep care tasks moving without forcing a yes-or-no showdown",
+      activity: "choices about how to participate, take a break, or rejoin without public attention",
+    },
+  },
   { id: "indirect_language", label: "Indirect language", phrase: "indirect, invitational language instead of direct demands" },
   { id: "humor", label: "Humor or playfulness", phrase: "humor, playfulness, or joining through an interest" },
   { id: "calm_tone", label: "Low voice / calm tone", phrase: "a calm tone and low-arousal body language" },
   { id: "pause_space", label: "Space to pause", phrase: "permission to pause without being chased by more words" },
-  { id: "previewing", label: "Previewing what will happen", phrase: "a preview of what will happen next" },
+  {
+    id: "previewing",
+    label: "Previewing what will happen",
+    phrase: "a preview of what will happen next",
+    audiencePhrases: {
+      medical: "previewing each step before touching, examining, or beginning a procedure",
+      teacher: "previewing changes, transitions, and expectations before the class has to move",
+      activity: "previewing drills, transitions, and group expectations before participation is required",
+    },
+  },
   { id: "reduced_language", label: "Reduced language when overwhelmed", phrase: "fewer words when stress is rising" },
   { id: "trusted_adult", label: "Trusted adult nearby", phrase: "a trusted adult nearby without making it a public issue" },
   { id: "sensory_supports", label: "Sensory supports", phrase: "sensory supports or a quieter place when needed" },
@@ -141,7 +179,17 @@ export const helpOptions: OptionItem[] = [
 ];
 
 export const demandOptions: OptionItem[] = [
-  { id: "direct_instructions", label: "Direct instructions", phrase: "direct instructions that sound like there is only one acceptable answer" },
+  {
+    id: "direct_instructions",
+    label: "Direct instructions",
+    phrase: "direct instructions that sound like there is only one acceptable answer",
+    audiencePhrases: {
+      medical: "direct instructions during unfamiliar procedures, especially without previewing or consent",
+      relative: "direct instructions can feel much bigger than they look from the outside; collaborative language usually works better than insisting in the moment",
+      childcare: "direct instructions can turn routine care into a power struggle; choices and low-pressure pacing usually work better",
+      activity: "direct instructions in front of a group can feel exposing; private options and flexible participation usually work better",
+    },
+  },
   { id: "being_watched", label: "Being watched", phrase: "being watched closely while trying to start" },
   { id: "being_rushed", label: "Being rushed", phrase: "rushing, countdowns, or urgent language" },
   { id: "public_correction", label: "Public correction", phrase: "public correction or being singled out" },
@@ -224,18 +272,19 @@ export const defaultAnswers: SupportSheetAnswers = {
   recovery: ["time_alone", "no_post_event_lecture", "reconnect_without_shame"],
   contactNote: "Text or call me if the day is getting hard.",
   customNotes: "Sam does best when adults sound curious instead of firm.",
+  sectionNotes: {},
 };
 
 function getAudience(audience: AudienceKey) {
   return audienceOptions.find((option) => option.id === audience) ?? audienceOptions[0];
 }
 
-function getPhrases(ids: string[], options: OptionItem[]) {
+function getPhrases(ids: string[], options: OptionItem[], audience: AudienceKey) {
   const selected = ids
     .map((id) => options.find((option) => option.id === id))
     .filter((item): item is OptionItem => Boolean(item));
 
-  return selected.map((item) => item.phrase);
+  return selected.map((item) => item.audiencePhrases?.[audience] ?? item.phrase);
 }
 
 function listSentence(items: string[]) {
@@ -262,12 +311,31 @@ export function generateSupportSheetOutputs(
   const connection = answers.child.connectionPoints.trim();
   const customNotes = answers.customNotes.trim();
   const contactNote = answers.contactNote.trim();
-  const helps = getPhrases(answers.helps, helpOptions);
-  const demands = getPhrases(answers.demands, demandOptions);
-  const distressSigns = getPhrases(answers.distressSigns, distressOptions);
-  const avoid = getPhrases(answers.avoid, avoidOptions);
-  const escalationPlan = getPhrases(answers.escalationPlan, escalationOptions);
-  const recovery = getPhrases(answers.recovery, recoveryOptions);
+  const sectionNotes = answers.sectionNotes ?? {};
+  const helps = withSectionNote(
+    getPhrases(answers.helps, helpOptions, answers.audience),
+    sectionNotes.helps,
+  );
+  const demands = withSectionNote(
+    getPhrases(answers.demands, demandOptions, answers.audience),
+    sectionNotes.demands,
+  );
+  const distressSigns = withSectionNote(
+    getPhrases(answers.distressSigns, distressOptions, answers.audience),
+    sectionNotes.distressSigns,
+  );
+  const avoid = withSectionNote(
+    getPhrases(answers.avoid, avoidOptions, answers.audience),
+    sectionNotes.avoid,
+  );
+  const escalationPlan = withSectionNote(
+    getPhrases(answers.escalationPlan, escalationOptions, answers.audience),
+    sectionNotes.escalationPlan,
+  );
+  const recovery = withSectionNote(
+    getPhrases(answers.recovery, recoveryOptions, answers.audience),
+    sectionNotes.recovery,
+  );
   const preparedAt = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -279,6 +347,7 @@ export function generateSupportSheetOutputs(
       ? `${name} connects through ${connection}. Starting with connection usually makes ${audience.focus} easier.`
       : `${name} does best when adults begin with connection and keep expectations flexible.`,
     customNotes || `${name} is more likely to stay connected when adults use low-pressure, collaborative support.`,
+    ...(sectionNotes.about?.trim() ? [sectionNotes.about.trim()] : []),
   ];
 
   const sections: SupportSheetSection[] = [
@@ -289,7 +358,13 @@ export function generateSupportSheetOutputs(
     { title: "Please Avoid", items: avoid.length ? avoid : ["turning the moment into a public correction or power struggle"] },
     { title: "If Things Escalate", items: escalationPlan.length ? escalationPlan : ["reduce language, create space, and pause the demand when possible"] },
     { title: "Recovery and Afterward", items: recovery.length ? recovery : ["time to recover, reconnection without shame, and trying again later"] },
-    { title: "Parent / Caregiver Note", items: [contactNote || "Please contact me if support is not helping or safety becomes a concern."] },
+    {
+      title: "Parent / Caregiver Note",
+      items: withSectionNote(
+        [contactNote || "Please contact me if support is not helping or safety becomes a concern."],
+        sectionNotes.contactNote,
+      ),
+    },
   ];
 
   const email = [
@@ -334,6 +409,11 @@ export function generateSupportSheetOutputs(
   };
 }
 
+function withSectionNote(items: string[], note?: string) {
+  const trimmed = note?.trim();
+  return trimmed ? [...items, trimmed] : items;
+}
+
 export function createInitialSupportSheetDraft(
   answers: SupportSheetAnswers,
 ): EditableSupportSheetDraft {
@@ -342,3 +422,110 @@ export function createInitialSupportSheetDraft(
     updatedAt: new Date().toISOString(),
   };
 }
+
+function preset(
+  audience: SupportSheetPreset["audience"],
+  label: string,
+  description: string,
+  answers: Omit<SupportSheetAnswers, "audience">,
+): SupportSheetPreset {
+  return {
+    audience,
+    label,
+    description,
+    answers: {
+      ...answers,
+      audience,
+    },
+  };
+}
+
+export const supportSheetPresets: SupportSheetPreset[] = [
+  preset("teacher", "Teacher example", "A school handoff focused on classroom participation and transitions.", {
+    child: {
+      name: "Riley",
+      pronouns: "they/them",
+      ageRange: "elementary",
+      connectionPoints: "drawing, animals, building games",
+    },
+    helps: ["choices", "extra_processing_time", "indirect_language", "previewing"],
+    demands: ["direct_instructions", "being_rushed", "public_correction"],
+    distressSigns: ["goes_quiet", "negotiates_or_delays", "leaves_area"],
+    avoid: ["public_consequences", "debating", "power_struggle"],
+    escalationPlan: ["reduce_language", "create_space", "remove_demand"],
+    recovery: ["time_alone", "reconnect_without_shame", "try_later"],
+    contactNote: "Please message me if the day is starting to unravel.",
+    customNotes: "Riley usually has more capacity after a quiet reset than after extra reminders.",
+    sectionNotes: {
+      helps: "A private preview before transitions is often enough to keep Riley connected.",
+    },
+  }),
+  preset("relative", "Family example", "A family-facing note that explains support without debating discipline.", {
+    child: {
+      name: "Jordan",
+      pronouns: "he/him",
+      ageRange: "middle school",
+      connectionPoints: "maps, jokes, cooking shows",
+    },
+    helps: ["choices", "humor", "pause_space"],
+    demands: ["direct_instructions", "too_many_questions", "performance_praise"],
+    distressSigns: ["says_no", "appears_controlling", "leaves_area"],
+    avoid: ["you_have_to", "debating", "power_struggle"],
+    escalationPlan: ["neutral_reset", "choices_no_answer", "wait_try_again"],
+    recovery: ["preferred_interest", "no_post_event_lecture", "reconnect_without_shame"],
+    contactNote: "Please text me before things become a family debate.",
+    customNotes: "Jordan is not trying to be disrespectful; pressure can make even preferred things feel impossible.",
+    sectionNotes: {},
+  }),
+  preset("childcare", "Babysitter example", "A practical care note for safety and what to do when things get hard.", {
+    child: {
+      name: "Avery",
+      pronouns: "she/her",
+      ageRange: "elementary",
+      connectionPoints: "music, crafts, pretend restaurant",
+    },
+    helps: ["choices", "calm_tone", "sensory_supports"],
+    demands: ["being_watched", "being_rushed", "unexpected_transitions"],
+    distressSigns: ["hides", "freezes", "pain_illness"],
+    avoid: ["taking_items", "repeat_louder", "touching_without_consent"],
+    escalationPlan: ["reduce_language", "quieter_area", "contact_parent"],
+    recovery: ["snack_drink", "quiet_activity", "parent_contact"],
+    contactNote: "Call me if Avery hides, freezes, or says her stomach hurts more than once.",
+    customNotes: "Avery responds best when care tasks are offered as choices, not announced as requirements.",
+    sectionNotes: {},
+  }),
+  preset("medical", "Provider example", "An appointment note centered on consent, previewing, and pauses.", {
+    child: {
+      name: "Morgan",
+      pronouns: "they/them",
+      ageRange: "middle school",
+      connectionPoints: "weather facts, space, word games",
+    },
+    helps: ["previewing", "choices", "reduced_language", "opt_out"],
+    demands: ["direct_instructions", "physical_prompting", "too_many_questions"],
+    distressSigns: ["goes_quiet", "freezes", "pain_illness"],
+    avoid: ["touching_without_consent", "surprise_changes", "you_have_to"],
+    escalationPlan: ["reduce_language", "neutral_reset", "wait_try_again"],
+    recovery: ["time_alone", "sensory_regulation", "parent_contact"],
+    contactNote: "Please pause and check with me if Morgan stops answering.",
+    customNotes: "Morgan can usually participate when each step is previewed and consent is checked.",
+    sectionNotes: {},
+  }),
+  preset("activity", "Coach example", "A participation note for clubs, camps, sports, or lessons.", {
+    child: {
+      name: "Casey",
+      pronouns: "they/them",
+      ageRange: "elementary",
+      connectionPoints: "running games, jokes, collecting facts",
+    },
+    helps: ["choices", "humor", "opt_out", "trusted_adult"],
+    demands: ["public_correction", "being_watched", "performance_praise"],
+    distressSigns: ["silly_disruptive", "louder", "leaves_area"],
+    avoid: ["public_consequences", "power_struggle", "repeat_louder"],
+    escalationPlan: ["create_space", "remove_demand", "choices_no_answer"],
+    recovery: ["preferred_interest", "try_later", "reconnect_without_shame"],
+    contactNote: "Please let me know if Casey needs to sit out so we can keep it low-key.",
+    customNotes: "Casey often rejoins faster when stepping out is treated as neutral, not as quitting.",
+    sectionNotes: {},
+  }),
+];

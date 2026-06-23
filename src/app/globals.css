@@ -363,6 +363,41 @@ button {
   gap: 8px;
 }
 
+.preset-grid,
+.section-note-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.preset-button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfdfb;
+  color: var(--ink);
+  display: grid;
+  gap: 4px;
+  min-height: 82px;
+  padding: 12px;
+  text-align: left;
+}
+
+.preset-button:hover {
+  border-color: var(--teal);
+  background: var(--surface-soft);
+}
+
+.preset-button strong {
+  color: var(--teal-dark);
+  font-size: 13px;
+}
+
+.preset-button span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .chip {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -496,6 +531,17 @@ button {
   resize: vertical;
 }
 
+.copy-confirmation {
+  border: 1px solid rgba(17, 97, 92, 0.18);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--teal-dark);
+  font-size: 13px;
+  font-weight: 760;
+  margin-top: 12px;
+  padding: 11px 12px;
+}
+
 .donation-panel {
   align-items: center;
   display: flex;
@@ -598,6 +644,8 @@ button {
 
   .tool-grid,
   .field-grid,
+  .preset-grid,
+  .section-note-grid,
   .sheet-sections,
   .side-nav {
     grid-template-columns: 1fr;

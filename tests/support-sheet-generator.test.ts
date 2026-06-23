@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import {
   createInitialSupportSheetDraft,
   generateSupportSheetOutputs,
+  supportSheetPresets,
   type SupportSheetAnswers,
 } from "../src/lib/support-sheet";
 
@@ -21,6 +24,10 @@ const baseAnswers: SupportSheetAnswers = {
   recovery: ["time_alone", "no_post_event_lecture", "reconnect_without_shame"],
   contactNote: "Text me if the day is getting hard.",
   customNotes: "Sam does best when adults sound curious instead of firm.",
+  sectionNotes: {
+    helps: "Offer a drawing pad before asking Sam to join.",
+    escalationPlan: "If Sam leaves, wait by the doorway instead of following.",
+  },
 };
 
 describe("support sheet generator", () => {
@@ -59,5 +66,64 @@ describe("support sheet generator", () => {
     expect(draft.email.length).toBeGreaterThan(200);
     expect(draft.shortText.length).toBeGreaterThan(80);
     expect(draft.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it("uses audience-specific wording for medical and family recipients", () => {
+    const medical = generateSupportSheetOutputs({
+      ...baseAnswers,
+      audience: "medical",
+      demands: ["direct_instructions"],
+      helps: ["previewing", "choices"],
+    });
+    const relative = generateSupportSheetOutputs({
+      ...baseAnswers,
+      audience: "relative",
+      demands: ["direct_instructions"],
+      helps: ["choices"],
+    });
+
+    expect(medical.sheet.sections[2].items.join(" ")).toContain("procedures");
+    expect(medical.sheet.sections[1].items.join(" ")).toContain("consent");
+    expect(relative.sheet.sections[2].items.join(" ")).toContain("collaborative");
+    expect(relative.sheet.sections[2].items.join(" ")).not.toContain("procedures");
+  });
+
+  it("adds section-specific parent notes to the matching generated sections", () => {
+    const outputs = generateSupportSheetOutputs(baseAnswers);
+    const helps = outputs.sheet.sections.find((section) => section.title === "What Helps");
+    const escalation = outputs.sheet.sections.find(
+      (section) => section.title === "If Things Escalate",
+    );
+    const avoid = outputs.sheet.sections.find((section) => section.title === "Please Avoid");
+
+    expect(helps?.items.at(-1)).toBe("Offer a drawing pad before asking Sam to join.");
+    expect(escalation?.items.at(-1)).toBe(
+      "If Sam leaves, wait by the doorway instead of following.",
+    );
+    expect(avoid?.items.join(" ")).not.toContain("drawing pad");
+  });
+
+  it("provides non-sensitive sample presets for common audiences", () => {
+    expect(supportSheetPresets.map((preset) => preset.audience)).toEqual([
+      "teacher",
+      "relative",
+      "childcare",
+      "medical",
+      "activity",
+    ]);
+
+    for (const preset of supportSheetPresets) {
+      expect(preset.label).toMatch(/example/i);
+      expect(preset.answers.child.name).toMatch(/^(Riley|Jordan|Avery|Morgan|Casey)$/);
+      expect(preset.answers.customNotes).not.toContain("Sam");
+    }
+  });
+
+  it("does not introduce a Support Sheet Builder API route or server persistence path", () => {
+    const projectRoot = join(__dirname, "..");
+
+    expect(existsSync(join(projectRoot, "src/app/api/support-sheet"))).toBe(false);
+    expect(existsSync(join(projectRoot, "src/app/api/support-sheet-builder"))).toBe(false);
+    expect(existsSync(join(projectRoot, "src/server/support-sheet.ts"))).toBe(false);
   });
 });
