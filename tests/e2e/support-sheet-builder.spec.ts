@@ -76,4 +76,70 @@ test.describe("Support Sheet Builder", () => {
     expect(viewport.scrollWidth).toBeLessThanOrEqual(390);
     expect(viewport.clippedTextareas).toEqual([]);
   });
+
+  test("print output fits common one-page paper sizes", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium", "desktop print layout check only");
+
+    const paperSizes = [
+      { name: "Letter", contentWidth: 729, contentHeight: 969 },
+      { name: "A4", contentWidth: 707, contentHeight: 1035 },
+    ];
+
+    for (const paper of paperSizes) {
+      await page.emulateMedia({ media: "screen" });
+      await page.setViewportSize({
+        width: paper.contentWidth,
+        height: paper.contentHeight,
+      });
+      await page.goto("/tools/support-sheet-builder");
+      await page.getByRole("button", { name: /Generate support sheet/i }).click();
+      await page.emulateMedia({ media: "print" });
+
+      const printLayout = await page.evaluate(() => {
+        const sheet = document.querySelector(".printable-sheet");
+        const sheetRect = sheet?.getBoundingClientRect();
+        const visibleNoPrint = [...document.querySelectorAll(".no-print")].filter((element) => {
+          const style = getComputedStyle(element);
+          return style.display !== "none" && style.visibility !== "hidden";
+        });
+        const visibleControls = [...document.querySelectorAll("button, input, textarea, select")].filter(
+          (element) => {
+            const style = getComputedStyle(element);
+            return style.display !== "none" && style.visibility !== "hidden";
+          },
+        );
+        const sectionColumns = getComputedStyle(
+          document.querySelector(".sheet-sections") as Element,
+        ).gridTemplateColumns;
+
+        return {
+          columns: sectionColumns.split(" ").filter(Boolean).length,
+          printListDisplay: getComputedStyle(
+            document.querySelector(".print-only-list") as Element,
+          ).display,
+          printTitleDisplay: getComputedStyle(
+            document.querySelector(".print-only-title") as Element,
+          ).display,
+          sheetHeight: sheetRect?.height ?? 0,
+          sheetWidth: sheetRect?.width ?? 0,
+          visibleControls: visibleControls.length,
+          visibleNoPrint: visibleNoPrint.length,
+        };
+      });
+
+      expect(printLayout, `${paper.name} print layout`).toMatchObject({
+        columns: 2,
+        printListDisplay: "block",
+        printTitleDisplay: "block",
+        visibleControls: 0,
+        visibleNoPrint: 0,
+      });
+      expect(printLayout.sheetWidth, `${paper.name} print width`).toBeLessThanOrEqual(
+        paper.contentWidth,
+      );
+      expect(printLayout.sheetHeight, `${paper.name} print height`).toBeLessThanOrEqual(
+        paper.contentHeight,
+      );
+    }
+  });
 });

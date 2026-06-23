@@ -694,6 +694,11 @@ button {
     padding: 0;
   }
 
+  .sheet-sections {
+    gap: 12px 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .print-only-title,
   .print-only-subtitle,
   .print-only-list {
