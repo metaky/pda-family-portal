@@ -12,7 +12,8 @@ export const migrationInventory: MigrationInventoryItem[] = [
     feature: "Declarative Language Translator",
     portalRoute: "/tools/declarative-language-translator",
     sourceProject: "/Users/kyle.wegner/Dev Projects/declarative",
-    status: "Native route stubbed; source-guided migration pending.",
+    status:
+      "Native MVP migrated into the portal with prompt behavior, variations, local history, privacy guardrails, mocked e2e coverage, and live Gemini route support; source eval parity still needs a live-key pass.",
     sourceFiles: [
       "components/Translator.tsx",
       "services/geminiService.ts",

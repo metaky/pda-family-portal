@@ -15,7 +15,7 @@ export const tools: PortalTool[] = [
     title: "Declarative Language Translator",
     href: "/tools/declarative-language-translator",
     description: "Turn direct, demand-heavy language into more declarative, autonomy-preserving phrasing.",
-    status: "migration-planned",
+    status: "ready",
     job: "Type a phrase. Get gentler PDA-aware wording.",
   },
   {

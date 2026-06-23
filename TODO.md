@@ -308,32 +308,32 @@ Primary source files:
 
 Tasks:
 
-- [ ] Inventory current translator behavior and interaction states.
-- [ ] Inventory prompt behavior, tone options, variation behavior, and quality eval assets.
-- [ ] Decide whether portal translator API should reuse the existing Gemini service directly or adapt it into Next.js route handlers.
-- [ ] Write failing tests for the portal translator service contract.
-- [ ] Port translator UI into `/tools/declarative-language-translator`.
-- [ ] Port translation prompt behavior.
-- [ ] Port variation behavior.
-- [ ] Port local history behavior if it still fits the portal UX.
-- [ ] Port privacy and terms language where still relevant.
-- [ ] Ensure analytics does not capture typed phrases or generated translations.
-- [ ] Add donation prompt after translation value is delivered.
-- [ ] Update migration inventory status when parity is verified.
+- [x] Inventory current translator behavior and interaction states.
+- [x] Inventory prompt behavior, tone options, variation behavior, and quality eval assets.
+- [x] Decide whether portal translator API should reuse the existing Gemini service directly or adapt it into Next.js route handlers.
+- [x] Write failing tests for the portal translator service contract.
+- [x] Port translator UI into `/tools/declarative-language-translator`.
+- [x] Port translation prompt behavior.
+- [x] Port variation behavior.
+- [x] Port local history behavior if it still fits the portal UX.
+- [x] Port privacy and terms language where still relevant.
+- [x] Ensure analytics does not capture typed phrases or generated translations.
+- [x] Add donation prompt after translation value is delivered.
+- [x] Update migration inventory status for the native MVP, with live eval parity still called out.
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e` once translator e2e coverage exists.
-- [ ] Browser check short parent phrase translation.
-- [ ] Browser check tone/variation controls.
-- [ ] Browser check copy-to-clipboard.
-- [ ] Browser check loading, error, and empty states.
-- [ ] Use `$playwright-cli` for quick snapshots and console/network inspection during migration.
-- [ ] Use `$playwright-interactive` for final visual QA of the migrated translator route.
-- [ ] Compare output quality against existing Declarative App examples/evals.
-- [ ] Confirm no sensitive typed/generated text is sent to analytics.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] `npm run test:e2e` once translator e2e coverage exists.
+- [x] Browser check short parent phrase translation with mocked route responses.
+- [x] Browser check tone/variation controls.
+- [x] Browser check copy-to-clipboard.
+- [x] Browser check loading, error, and empty states.
+- [x] Use checked-in Playwright and the in-app Browser plugin for route smoke checks, snapshots, console inspection, and interaction proof during migration.
+- [x] Use in-app Browser final visual QA of the migrated translator route.
+- [ ] Compare output quality against existing Declarative App examples/evals with a live Gemini key.
+- [x] Confirm no sensitive typed/generated text is sent to analytics.
 
 ## Phase 5: PDA IEP Advice Migration
 
