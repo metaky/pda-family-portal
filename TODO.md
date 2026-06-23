@@ -332,7 +332,7 @@ Verification:
 - [x] Browser check loading, error, and empty states.
 - [x] Use checked-in Playwright and the in-app Browser plugin for route smoke checks, snapshots, console inspection, and interaction proof during migration.
 - [x] Use in-app Browser final visual QA of the migrated translator route.
-- [ ] Compare output quality against existing Declarative App examples/evals with a live Gemini key.
+- [x] Compare output quality against existing Declarative App examples/evals with a live Gemini key.
 - [x] Confirm no sensitive typed/generated text is sent to analytics.
 
 ## Phase 5: PDA IEP Advice Migration

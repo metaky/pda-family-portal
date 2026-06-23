@@ -379,10 +379,28 @@ function buildContextInstruction(text: string, tone?: TranslatorTone, interest?:
     instructions.push(
       "Meal sequence: keep coming down/downstairs when present, handwashing, and meal timing in each option. Preserve order when the request says come down and wash hands.",
     );
+    if (isPokemonInterest) {
+      instructions.push(
+        `Pokemon meal transition: use "${interest}" or a recognizable Pokemon element to make the sequence or wash-up make sense. Good shapes: "The sink is like Squirtle, washing hands before dinner." / "The sink is our next Poke-stop before dinner." / "Trainer route: downstairs, sink, then dinner." Bad shapes: "Pokemon hand wash," "Pokemon clean hands," "Pokemon-level clean," "Pokemon quick stop: hands, then dinner," "Pikachu-speed down," "Quick Attack" or rapid-fire language for handwashing, "Pokemon dinner," or turning dinner, hands, plates, or the sink into Pokemon objects.`,
+      );
+    } else if (hasInterest) {
+      instructions.push(
+        `Interest Based meal transition: use "${interest}" or a recognizable element from it to make the sequence or wash-up make sense without turning hands, dinner, food, plates, or the sink into ${interest} objects.`,
+      );
+    }
   }
 
   if (/\b(pick up|put\b.*\baway|clean|cleanup|toys?|blocks?|clothes?)\b/.test(normalized) && /\b(upstairs|room|bedroom|closet|shelf|basket|bin|drawer)\b/.test(normalized)) {
     instructions.push("Cleanup destination: keep both picking up/putting away and the destination.");
+    if (isPokemonInterest) {
+      instructions.push(
+        `Pokemon cleanup: use "${interest}" or a recognizable Pokemon element as a route, map, trainer path, careful steps, or comparison while keeping the facts unchanged. Do not rename real toys as Pokemon. Do not say "these Pokemon," "loose Pokemon," "Pokemon toys," or "the Pokemon" unless the caregiver said the toys are Pokemon. Keep saying toys/items/things for the real objects. Do not use Poke-stop for cleanup, do not send toys to a pretend Pokemon place, and avoid "Pokemon cleanup," "Pokemon'd away," "Toy Poke-stop," and generic challenge/checkpoint language unless it includes concrete Pokemon route logic.`,
+      );
+    } else if (hasInterest) {
+      instructions.push(
+        `Interest Based cleanup: use "${interest}" as a style, route, map, path, or comparison while keeping the facts unchanged. Do not turn the toys into part of the interest world or send them to invented ${interest} containers, vehicles, or places.`,
+      );
+    }
   }
 
   if (hasInterest) {
@@ -414,6 +432,11 @@ function buildFewerWordsInstruction(text: string, tone?: TranslatorTone, interes
 
   if (tone === "Interest Based" && interest) {
     instructions.push(`For Interest Based, every compact option must still include "${interest}" or a recognizable element from it, and that element must connect logically to the task.`);
+    if (normalizeInterestName(interest) === "pokemon") {
+      instructions.push(
+        `For Pokemon cleanup, do not use Poke-stop. Do not say "these Pokemon," "loose Pokemon," "Pokemon toys," "Pokemon cleanup," or "Pokemon'd away" for real toys. For Pokemon meal transitions, avoid "Pokemon hand wash," "Pikachu-speed down," and fake Pokemon labels for hands, dinner, the sink, or toys.`,
+      );
+    }
   }
 
   return ` CRITICAL: ${instructions.join(" ")}`;

@@ -69,4 +69,28 @@ describe("declarative translator contract", () => {
       { translation: "Downstairs, hands, dinner?" },
     ]);
   });
+
+  it("includes source guardrails for Pokemon dinner and cleanup prompts", () => {
+    const dinnerPrompt = buildDeclarativePrompt({
+      interest: "Pokemon",
+      mode: "translate",
+      text: "Please come down and wash your hands. It's dinner time.",
+      tone: "Interest Based",
+      useFewerWords: true,
+    });
+    const cleanupPrompt = buildDeclarativePrompt({
+      interest: "Pokemon",
+      mode: "translate",
+      text: "Pick up your toys and put them away upstairs in your room",
+      tone: "Interest Based",
+      useFewerWords: true,
+    });
+
+    expect(dinnerPrompt).toContain("Bad shapes");
+    expect(dinnerPrompt).toContain("Pokemon hand wash");
+    expect(dinnerPrompt).toContain("Pikachu-speed");
+    expect(cleanupPrompt).toContain("do not use Poke-stop");
+    expect(cleanupPrompt).toContain("Do not rename real toys as Pokemon");
+    expect(cleanupPrompt).toContain('Do not say "these Pokemon,"');
+  });
 });

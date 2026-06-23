@@ -13,7 +13,7 @@ export const migrationInventory: MigrationInventoryItem[] = [
     portalRoute: "/tools/declarative-language-translator",
     sourceProject: "/Users/kyle.wegner/Dev Projects/declarative",
     status:
-      "Native MVP migrated into the portal with prompt behavior, variations, local history, privacy guardrails, mocked e2e coverage, and live Gemini route support; source eval parity still needs a live-key pass.",
+      "Native MVP migrated into the portal with prompt behavior, variations, local history, privacy guardrails, mocked e2e coverage, live Gemini route support, and a source-eval spot check; full source evaluator parity remains a pre-launch hardening task.",
     sourceFiles: [
       "components/Translator.tsx",
       "services/geminiService.ts",
