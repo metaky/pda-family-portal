@@ -39,6 +39,12 @@ test.describe("Support Sheet Builder", () => {
       /pause and explain the next step/,
     );
     await expect(page.getByText("If this saved you an hour of emotional labor")).toBeVisible();
+    await page.getByRole("button", { name: "Share this tool" }).click();
+    await expect(page.getByRole("status")).toContainText("Copied tool link");
+    const sharedText = await page.evaluate(() => navigator.clipboard.readText());
+    expect(sharedText).toContain("/tools/support-sheet-builder");
+    expect(sharedText).not.toContain("Taylor");
+    expect(sharedText).not.toContain("?");
 
     await page.getByRole("tab", { name: "Email" }).click();
     await expect(page.locator(".copy-box")).toHaveValue(
@@ -140,6 +146,40 @@ test.describe("Support Sheet Builder", () => {
       expect(printLayout.sheetHeight, `${paper.name} print height`).toBeLessThanOrEqual(
         paper.contentHeight,
       );
+    }
+  });
+
+  test("public examples make value clear before form entry", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium", "desktop examples route check only");
+
+    const examples = [
+      { slug: "teacher", title: "Teacher example" },
+      { slug: "family", title: "Grandparent or relative example" },
+      { slug: "childcare", title: "Babysitter or childcare example" },
+      { slug: "medical-provider", title: "Dentist or provider example" },
+      { slug: "activity-leader", title: "Coach, camp, or activity example" },
+    ];
+
+    await page.goto("/tools/support-sheet-builder/examples");
+    await expect(page.getByRole("heading", { name: "Support Sheet Examples" })).toBeVisible();
+    await expect(page.getByText("Preview fictional examples before entering child details.")).toBeVisible();
+
+    for (const example of examples) {
+      await expect(page.getByRole("link", { name: new RegExp(example.title, "i") })).toBeVisible();
+    }
+
+    for (const example of examples) {
+      await page.goto(`/tools/support-sheet-builder/examples/${example.slug}`);
+      await expect(page.getByRole("heading", { name: example.title })).toBeVisible();
+      await expect(page.getByText("Fictional example")).toBeVisible();
+      await expect(page.getByText("What this shows")).toBeVisible();
+      await expect(page.getByRole("link", { name: "Build your own support sheet" })).toHaveAttribute(
+        "href",
+        "/tools/support-sheet-builder",
+      );
+      await expect(page.getByRole("textbox", { name: "Child name or nickname" })).toHaveCount(0);
+      await expect(page.getByRole("heading", { name: /How to Support/i })).toBeVisible();
+      await expect(page.getByText("Created with the free PDA Support Sheet Builder.")).toBeVisible();
     }
   });
 });

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   Check,
@@ -7,6 +8,7 @@ import {
   Heart,
   Printer,
   RotateCcw,
+  Share2,
   ShieldCheck,
   Sparkles,
   Sprout,
@@ -201,6 +203,14 @@ export function SupportSheetBuilder() {
   async function copyText(label: string, text: string) {
     await navigator.clipboard.writeText(text);
     setCopied(label);
+    setTimeout(() => setCopied(null), 1800);
+  }
+
+  async function shareTool() {
+    const toolUrl = new URL("/tools/support-sheet-builder", window.location.origin).toString();
+
+    await navigator.clipboard.writeText(toolUrl);
+    setCopied("tool link");
     setTimeout(() => setCopied(null), 1800);
   }
 
@@ -399,6 +409,9 @@ export function SupportSheetBuilder() {
             <button className="button button-primary" onClick={generate} type="button">
               <Sparkles size={17} /> Generate support sheet
             </button>
+            <Link className="button button-secondary" href="/tools/support-sheet-builder/examples">
+              View examples
+            </Link>
             <button className="button button-ghost" onClick={reset} type="button">
               <RotateCcw size={16} /> Clear form
             </button>
@@ -557,6 +570,9 @@ export function SupportSheetBuilder() {
             <a className="button button-coral" href="/donate">
               <Heart size={16} /> Donate to support
             </a>
+            <button className="button button-secondary" onClick={shareTool} type="button">
+              <Share2 size={16} /> Share this tool
+            </button>
           </aside>
         ) : null}
       </section>

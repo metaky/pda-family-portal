@@ -260,26 +260,26 @@ Verification:
 
 Goal: Let parents understand the tool's value before entering personal information and make sharing happen naturally.
 
-- [ ] Create public example route structure.
-- [ ] Add example support sheet for a teacher.
-- [ ] Add example support sheet for grandparents or relatives.
-- [ ] Add example support sheet for babysitter or childcare.
-- [ ] Add example support sheet for dentist or medical provider.
-- [ ] Add example support sheet for coach, camp, or activity leader.
-- [ ] Add "share this tool" action after generation.
+- [x] Create public example route structure.
+- [x] Add example support sheet for a teacher.
+- [x] Add example support sheet for grandparents or relatives.
+- [x] Add example support sheet for babysitter or childcare.
+- [x] Add example support sheet for dentist or medical provider.
+- [x] Add example support sheet for coach, camp, or activity leader.
+- [x] Add "share this tool" action after generation.
 - [ ] Add quiet footer URL to printable output once deployment URL is known.
 - [ ] Add quiet footer URL to copied email text once deployment URL is known.
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e` once the checked-in Playwright harness exists.
-- [ ] Browser check each example route.
-- [ ] Use `$playwright-cli` snapshots for route smoke checks.
-- [ ] Use `$playwright-interactive` if examples introduce new layout patterns or visual states.
-- [ ] Confirm examples contain no real child data.
-- [ ] Confirm example pages make value clear without requiring form entry.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] `npm run test:e2e` once the checked-in Playwright harness exists.
+- [x] Browser check each example route.
+- [x] Use `$playwright-cli` snapshots for route smoke checks.
+- [x] Use `$playwright-interactive` if examples introduce new layout patterns or visual states.
+- [x] Confirm examples contain no real child data.
+- [x] Confirm example pages make value clear without requiring form entry.
 - [ ] Confirm share/footer copy can be removed or edited by the parent.
 
 ## Phase 4: Declarative Language Translator Migration
