@@ -423,6 +423,32 @@ export function createInitialSupportSheetDraft(
   };
 }
 
+function supportSheetToolUrl(input: string) {
+  const url = new URL(input);
+  return `${url.origin}/tools/support-sheet-builder`;
+}
+
+export function addToolUrlToSupportSheetDraft(
+  draft: EditableSupportSheetDraft,
+  inputUrl: string,
+): EditableSupportSheetDraft {
+  const toolUrl = supportSheetToolUrl(inputUrl);
+  const footer = `Created with the free PDA Support Sheet Builder: ${toolUrl}`;
+
+  return {
+    ...draft,
+    sheet: {
+      ...draft.sheet,
+      footer,
+    },
+    email: draft.email.replace(
+      /Created with the free PDA Support Sheet Builder\.?$/,
+      footer,
+    ),
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 function preset(
   audience: SupportSheetPreset["audience"],
   label: string,

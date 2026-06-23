@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import {
+  addToolUrlToSupportSheetDraft,
   createInitialSupportSheetDraft,
   generateSupportSheetOutputs,
   supportSheetPresets,
@@ -125,5 +126,23 @@ describe("support sheet generator", () => {
     expect(existsSync(join(projectRoot, "src/app/api/support-sheet"))).toBe(false);
     expect(existsSync(join(projectRoot, "src/app/api/support-sheet-builder"))).toBe(false);
     expect(existsSync(join(projectRoot, "src/server/support-sheet.ts"))).toBe(false);
+  });
+
+  it("adds a quiet editable tool URL footer without child data or query strings", () => {
+    const draft = createInitialSupportSheetDraft(baseAnswers);
+    const withToolUrl = addToolUrlToSupportSheetDraft(
+      draft,
+      "https://example.org/tools/support-sheet-builder?child=Sam&source=email",
+    );
+
+    expect(withToolUrl.sheet.footer).toBe(
+      "Created with the free PDA Support Sheet Builder: https://example.org/tools/support-sheet-builder",
+    );
+    expect(withToolUrl.email).toContain(
+      "Created with the free PDA Support Sheet Builder: https://example.org/tools/support-sheet-builder",
+    );
+    expect(withToolUrl.sheet.footer).not.toContain("Sam");
+    expect(withToolUrl.sheet.footer).not.toContain("?");
+    expect(withToolUrl.shortText).toBe(draft.shortText);
   });
 });

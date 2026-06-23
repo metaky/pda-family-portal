@@ -267,8 +267,8 @@ Goal: Let parents understand the tool's value before entering personal informati
 - [x] Add example support sheet for dentist or medical provider.
 - [x] Add example support sheet for coach, camp, or activity leader.
 - [x] Add "share this tool" action after generation.
-- [ ] Add quiet footer URL to printable output once deployment URL is known.
-- [ ] Add quiet footer URL to copied email text once deployment URL is known.
+- [x] Add quiet footer URL to printable output once deployment URL is known.
+- [x] Add quiet footer URL to copied email text once deployment URL is known.
 
 Verification:
 
@@ -280,7 +280,7 @@ Verification:
 - [x] Use `$playwright-interactive` if examples introduce new layout patterns or visual states.
 - [x] Confirm examples contain no real child data.
 - [x] Confirm example pages make value clear without requiring form entry.
-- [ ] Confirm share/footer copy can be removed or edited by the parent.
+- [x] Confirm share/footer copy can be removed or edited by the parent.
 
 ## Phase 4: Declarative Language Translator Migration
 

@@ -38,6 +38,14 @@ test.describe("Support Sheet Builder", () => {
     await expect(page.getByRole("textbox", { name: "If Things Escalate", exact: true })).toHaveValue(
       /pause and explain the next step/,
     );
+    await expect(page.getByLabel("Printable footer")).toHaveValue(
+      "Created with the free PDA Support Sheet Builder: http://127.0.0.1:3000/tools/support-sheet-builder",
+    );
+    await expect(page.getByLabel("Printable footer")).not.toHaveValue(/Taylor|\?/);
+    await page.getByLabel("Printable footer").fill("Custom footer parents can remove.");
+    await expect(page.getByLabel("Printable footer")).toHaveValue(
+      "Custom footer parents can remove.",
+    );
     await expect(page.getByText("If this saved you an hour of emotional labor")).toBeVisible();
     await page.getByRole("button", { name: "Share this tool" }).click();
     await expect(page.getByRole("status")).toContainText("Copied tool link");
@@ -50,6 +58,16 @@ test.describe("Support Sheet Builder", () => {
     await expect(page.locator(".copy-box")).toHaveValue(
       /I wanted to share a short support guide for Taylor/,
     );
+    await expect(page.locator(".copy-box")).toHaveValue(
+      /Created with the free PDA Support Sheet Builder: http:\/\/127\.0\.0\.1:3000\/tools\/support-sheet-builder/,
+    );
+    await expect(page.locator(".copy-box")).not.toHaveValue(/\?child=/);
+    const emailWithoutFooter = (await page.locator(".copy-box").inputValue()).replace(
+      /\n\nCreated with the free PDA Support Sheet Builder: http:\/\/127\.0\.0\.1:3000\/tools\/support-sheet-builder/,
+      "",
+    );
+    await page.locator(".copy-box").fill(emailWithoutFooter);
+    await expect(page.locator(".copy-box")).not.toHaveValue(/Support Sheet Builder: http/);
     await page.getByRole("button", { name: /^Copy$/ }).click();
     await expect(page.getByRole("status")).toContainText("Copied email");
     await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain(

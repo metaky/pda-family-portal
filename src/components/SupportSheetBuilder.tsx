@@ -14,6 +14,7 @@ import {
   Sprout,
 } from "lucide-react";
 import {
+  addToolUrlToSupportSheetDraft,
   audienceOptions,
   avoidOptions,
   createInitialSupportSheetDraft,
@@ -174,7 +175,9 @@ export function SupportSheetBuilder() {
   }
 
   function generate() {
-    setDraft(createInitialSupportSheetDraft(answers));
+    setDraft(
+      addToolUrlToSupportSheetDraft(createInitialSupportSheetDraft(answers), window.location.href),
+    );
     setGenerated(true);
     setActiveTab("sheet");
   }
@@ -194,7 +197,12 @@ export function SupportSheetBuilder() {
     }
 
     setAnswers(preset.answers);
-    setDraft(createInitialSupportSheetDraft(preset.answers));
+    setDraft(
+      addToolUrlToSupportSheetDraft(
+        createInitialSupportSheetDraft(preset.answers),
+        window.location.href,
+      ),
+    );
     setGenerated(false);
     setActiveTab("sheet");
     setCopied(null);
@@ -235,7 +243,7 @@ export function SupportSheetBuilder() {
     }));
   }
 
-  function updateSheetText(field: "title" | "subtitle", value: string) {
+  function updateSheetText(field: "title" | "subtitle" | "footer", value: string) {
     setDraft((current) => ({
       ...current,
       sheet: { ...current.sheet, [field]: value },
@@ -543,7 +551,16 @@ export function SupportSheetBuilder() {
               ))}
             </div>
 
-            <footer className="sheet-footer">{draft.sheet.footer}</footer>
+            <footer className="sheet-footer">
+              <textarea
+                aria-label="Printable footer"
+                className="edit-area footer-edit no-print"
+                onChange={(event) => updateSheetText("footer", event.target.value)}
+                rows={2}
+                value={draft.sheet.footer}
+              />
+              <span className="print-footer-text">{draft.sheet.footer}</span>
+            </footer>
           </div>
         ) : (
           <textarea

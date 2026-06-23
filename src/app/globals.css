@@ -510,6 +510,16 @@ button {
   font-size: 12px;
 }
 
+.footer-edit {
+  color: var(--muted);
+  font-size: 12px;
+  min-height: 54px;
+}
+
+.print-footer-text {
+  display: none;
+}
+
 .print-only-title,
 .print-only-subtitle,
 .print-only-list {
@@ -796,7 +806,8 @@ button {
 
   .print-only-title,
   .print-only-subtitle,
-  .print-only-list {
+  .print-only-list,
+  .print-footer-text {
     display: block;
   }
 
