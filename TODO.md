@@ -472,6 +472,31 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 - [ ] Configure Google Cloud project, Artifact Registry, Cloud Build trigger, Cloud Run service account, and Secret Manager secrets.
 - [ ] Deploy to Cloud Run with final `NEXT_PUBLIC_SITE_URL` and production secrets.
 
+Google Cloud deployment handoff:
+
+- [x] Create Google Cloud project `pda-family-portal` with display name `PDA Portal`.
+- [x] Set local gcloud defaults to project `pda-family-portal` and region `us-west1`.
+- [x] Confirm project number is `987113251595`.
+- [x] Submit Google billing quota increase request after `gcloud billing projects link` returned `Cloud billing quota exceeded`.
+- [ ] After billing approval, link project billing to `My Billing Account`; rediscover the account ID with `gcloud billing accounts list`.
+- [ ] After billing is linked, enable required APIs: Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloud Resource Manager, IAM, Logging, and Monitoring.
+- [ ] Create the Artifact Registry Docker repository in `us-west1` for Cloud Run images.
+- [ ] Create a least-privilege Cloud Run runtime service account.
+- [ ] Add production secrets to Secret Manager, including `GEMINI_API_KEY` and any production analytics secret if needed.
+- [ ] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
+- [ ] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
+- [ ] Verify the deployed Cloud Run URL, then decide whether to add a custom domain.
+
+Resume commands once billing approval is confirmed:
+
+```bash
+gcloud config set project pda-family-portal
+gcloud config set run/region us-west1
+gcloud billing accounts list
+gcloud billing projects link pda-family-portal --billing-account=<MY_BILLING_ACCOUNT_ID>
+gcloud services enable artifactregistry.googleapis.com cloudbuild.googleapis.com run.googleapis.com secretmanager.googleapis.com cloudresourcemanager.googleapis.com iam.googleapis.com logging.googleapis.com monitoring.googleapis.com --project pda-family-portal
+```
+
 Verification:
 
 - [x] `npm test`
