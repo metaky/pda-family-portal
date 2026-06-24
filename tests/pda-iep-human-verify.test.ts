@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  getDefaultBehaviorReportEnabled,
   getDefaultMockMode,
   getDefaultPdaIepAnalyzeEnabled,
   getDefaultSecurityMemoryStore,
@@ -42,11 +43,13 @@ describe("PDA IEP Advice human verification config", () => {
 
   it("defaults to local mock analyzer settings only in development", () => {
     expect(getDefaultPdaIepAnalyzeEnabled("development")).toBe(true);
+    expect(getDefaultBehaviorReportEnabled("development")).toBe(true);
     expect(getDefaultMockMode("development")).toBe(true);
     expect(getDefaultSecurityMemoryStore("development")).toBe(true);
     expect(getDefaultTestTokenAllowance("development")).toBe(true);
 
     expect(getDefaultPdaIepAnalyzeEnabled("production")).toBe(false);
+    expect(getDefaultBehaviorReportEnabled("production")).toBe(false);
     expect(getDefaultMockMode("production")).toBe(false);
     expect(getDefaultSecurityMemoryStore("production")).toBe(false);
     expect(getDefaultTestTokenAllowance("production")).toBe(false);
@@ -59,6 +62,7 @@ describe("PDA IEP Advice human verification config", () => {
     const config = getServerConfig();
 
     expect(config.features.pdaIepAnalyze).toBe(true);
+    expect(config.features.behaviorReport).toBe(true);
     expect(config.maintenanceMode).toBe(false);
     expect(config.mockMode).toBe(true);
     expect(config.security.useMemoryStore).toBe(true);
@@ -90,7 +94,7 @@ describe("PDA IEP Advice human verification config", () => {
       }),
     ).toBe(true);
     expect(isValidHumanVerifyBody({ purpose: "behavior-report", token: "x" })).toBe(
-      false,
+      true,
     );
     expect(isValidHumanVerifyBody({ purpose: "analyze" })).toBe(false);
   });

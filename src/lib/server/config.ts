@@ -3,6 +3,7 @@ import type { HumanVerificationMode } from "@/lib/human-verification";
 type ServerConfig = {
   features: {
     pdaIepAnalyze: boolean;
+    behaviorReport: boolean;
   };
   maintenanceMode: boolean;
   mockMode: boolean;
@@ -46,6 +47,11 @@ export function getDefaultPdaIepAnalyzeEnabled(
   return nodeEnv === "development";
 }
 
+export function getDefaultBehaviorReportEnabled(
+  nodeEnv = process.env.NODE_ENV,
+) {
+  return nodeEnv === "development";
+}
 
 export function getDefaultMaintenanceMode(nodeEnv = process.env.NODE_ENV) {
   return nodeEnv !== "development";
@@ -87,37 +93,40 @@ function parseNumber(value: string | undefined, fallback: number) {
 }
 
 function validateConfig(config: ServerConfig) {
-  if (!config.features.pdaIepAnalyze) {
+  const anyProtectedUploadFeature =
+    config.features.pdaIepAnalyze || config.features.behaviorReport;
+
+  if (!anyProtectedUploadFeature) {
     return config;
   }
 
   if (process.env.NODE_ENV === "production" && config.turnstile.allowTestTokens) {
     throw new Error(
-      "FEATURE_PDA_IEP_ANALYZE_ENABLED cannot use SECURITY_ALLOW_TEST_TOKENS=true in production.",
+      "Protected upload features cannot use SECURITY_ALLOW_TEST_TOKENS=true in production.",
     );
   }
 
   if (!config.security.useMemoryStore) {
     throw new Error(
-      "FEATURE_PDA_IEP_ANALYZE_ENABLED requires SECURITY_USE_MEMORY_STORE=true until production session storage is configured.",
+      "Protected upload features require SECURITY_USE_MEMORY_STORE=true until production session storage is configured.",
     );
   }
 
   if (!config.turnstile.allowTestTokens && !config.turnstile.secretKey) {
     throw new Error(
-      "FEATURE_PDA_IEP_ANALYZE_ENABLED requires TURNSTILE_SECRET_KEY or SECURITY_ALLOW_TEST_TOKENS=true.",
+      "Protected upload features require TURNSTILE_SECRET_KEY or SECURITY_ALLOW_TEST_TOKENS=true.",
     );
   }
 
   if (!config.security.signingSecret) {
     throw new Error(
-      "FEATURE_PDA_IEP_ANALYZE_ENABLED requires SESSION_SIGNING_SECRET for warning/session protection.",
+      "Protected upload features require SESSION_SIGNING_SECRET for warning/session protection.",
     );
   }
 
   if (!config.mockMode && !config.models.geminiApiKey) {
     throw new Error(
-      "FEATURE_PDA_IEP_ANALYZE_ENABLED requires GEMINI_API_KEY unless RAG_MOCK_MODE=true.",
+      "Protected upload features require GEMINI_API_KEY unless RAG_MOCK_MODE=true.",
     );
   }
 
@@ -134,6 +143,10 @@ export function getServerConfig(): ServerConfig {
       pdaIepAnalyze: parseBoolean(
         process.env.FEATURE_PDA_IEP_ANALYZE_ENABLED,
         getDefaultPdaIepAnalyzeEnabled(),
+      ),
+      behaviorReport: parseBoolean(
+        process.env.FEATURE_BEHAVIOR_REPORT_ENABLED,
+        getDefaultBehaviorReportEnabled(),
       ),
     },
     maintenanceMode: parseBoolean(

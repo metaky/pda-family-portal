@@ -1,4 +1,7 @@
-import type { AnalyzeReport } from "@/lib/server/api-types";
+import type {
+  AnalyzeReport,
+  BehaviorReportAnalysis,
+} from "@/lib/server/api-types";
 
 export const MOCK_ANALYZE_REPORT: AnalyzeReport = {
   score: 82,
@@ -52,6 +55,42 @@ export const MOCK_ANALYZE_REPORT: AnalyzeReport = {
         "Clarify that breaks can be self-initiated and do not require prior escalation.",
       quote: "Student may access a quiet sensory break area as needed.",
       page: 5,
+    },
+  ],
+};
+
+export const MOCK_BEHAVIOR_REPORT: BehaviorReportAnalysis = {
+  summary:
+    "The incident response included a few supportive steps, but staff missed several IEP-aligned de-escalation options and would benefit from more PDA-specific planning.",
+  whatWentWell: [
+    "Staff reduced demands after the student became distressed.",
+    "The report documents the timeline clearly enough to compare with the IEP.",
+  ],
+  whatCouldBeBetter: [
+    "Staff did not appear to offer autonomy-supportive choices before escalation.",
+    "The documented response relied too heavily on directive language.",
+  ],
+  iepGuidance: [
+    {
+      title: "Low-demand language",
+      description:
+        "Use declarative statements and collaborative prompts before asking the student to comply.",
+      quote: "Provide indirect, low-pressure prompts during dysregulation.",
+      page: 4,
+      source: "IEP",
+    },
+  ],
+  futureRecommendations: [
+    "Create a short incident response script aligned to the IEP.",
+    "Train staff on recognizing rising demand-related anxiety before escalation.",
+  ],
+  pdaConsiderations: [
+    {
+      strategy: "Collaborative exits",
+      explanation:
+        "Offering a non-directive exit path lowers perceived threat and preserves autonomy.",
+      howToImplement:
+        "Offer two neutral options, step back physically, and use a calm declarative tone.",
     },
   ],
 };

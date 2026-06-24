@@ -6,11 +6,12 @@ import {
   createVerifiedSession,
   enforceHumanVerifyRateLimit,
   getClientIp,
+  type RoutePurpose,
 } from "@/lib/server/security";
 
 type HumanVerifyBody = {
   token?: string;
-  purpose?: "analyze";
+  purpose?: RoutePurpose;
 };
 
 export function isValidHumanVerifyBody(
@@ -21,7 +22,30 @@ export function isValidHumanVerifyBody(
   }
 
   const record = body as Record<string, unknown>;
-  return record.purpose === "analyze" && typeof record.token === "string";
+  return (
+    (record.purpose === "analyze" ||
+      record.purpose === "behavior-report") &&
+    typeof record.token === "string"
+  );
+}
+
+function getFeatureUnavailableMessage(purpose: RoutePurpose) {
+  if (purpose === "behavior-report") {
+    return "PDA Behavior Report Help is temporarily unavailable.";
+  }
+
+  return "PDA IEP Advice analysis is temporarily unavailable.";
+}
+
+function isFeatureEnabledForPurpose(
+  purpose: RoutePurpose,
+  config = getServerConfig(),
+) {
+  if (purpose === "behavior-report") {
+    return config.features.behaviorReport;
+  }
+
+  return config.features.pdaIepAnalyze;
 }
 
 async function verifyTurnstileToken(req: NextRequest, token: string) {
@@ -110,16 +134,6 @@ export function apiVerifyErrorResponse(error: unknown) {
 
 export async function POST(req: NextRequest) {
   const config = getServerConfig();
-  if (!config.features.pdaIepAnalyze || config.maintenanceMode) {
-    return apiVerifyErrorResponse(
-      new PublicApiError(
-        "PDA IEP Advice analysis is temporarily unavailable.",
-        503,
-        "FEATURE_DISABLED",
-        true,
-      ),
-    );
-  }
 
   try {
     await enforceHumanVerifyRateLimit(req);
@@ -133,8 +147,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (config.maintenanceMode || !isFeatureEnabledForPurpose(body.purpose, config)) {
+      throw new PublicApiError(
+        getFeatureUnavailableMessage(body.purpose),
+        503,
+        "FEATURE_DISABLED",
+        true,
+      );
+    }
+
     await verifyTurnstileToken(req, body.token);
-    await createVerifiedSession(req, "analyze");
+    await createVerifiedSession(req, body.purpose);
 
     return apiVerifySuccessResponse();
   } catch (error) {

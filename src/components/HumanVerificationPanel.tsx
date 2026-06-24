@@ -12,10 +12,12 @@ export function HumanVerificationPanel({
   onClose,
   onVerified,
   open,
+  purpose = "analyze",
 }: {
   onClose: () => void;
   onVerified: () => void;
   open: boolean;
+  purpose?: "analyze" | "behavior-report";
 }) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +33,7 @@ export function HumanVerificationPanel({
     try {
       const response = await fetch("/api/pda-iep-advice/human-verify", {
         body: JSON.stringify({
-          purpose: "analyze",
+          purpose,
           token: getSecurityTestToken(),
         }),
         headers: {

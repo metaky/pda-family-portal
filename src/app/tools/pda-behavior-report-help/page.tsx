@@ -1,13 +1,17 @@
 import { Footer, PortalShell } from "@/components/PortalShell";
-import { ToolPlaceholder } from "@/components/ToolPlaceholder";
+import { BehaviorReportAnalyzer } from "@/components/BehaviorReportAnalyzer";
+import { getServerConfig } from "@/lib/server/config";
+
+export const dynamic = "force-dynamic";
 
 export default function PdaBehaviorReportHelpPage() {
+  const config = getServerConfig();
+
   return (
     <PortalShell>
-      <ToolPlaceholder
-        description="This route treats behavior incident review as a standalone portal feature. The actual dual-upload report comparison should be migrated from PDA Your IEP."
-        route="/tools/pda-behavior-report-help"
-        title="PDA Behavior Report Help"
+      <BehaviorReportAnalyzer
+        featureEnabled={config.features.behaviorReport}
+        maintenanceMode={config.maintenanceMode}
       />
       <Footer />
     </PortalShell>

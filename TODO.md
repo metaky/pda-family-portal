@@ -425,31 +425,31 @@ Primary source files:
 
 Tasks:
 
-- [ ] Inventory current behavior report flow and output schema.
-- [ ] Preserve standalone route at `/tools/pda-behavior-report-help`.
-- [ ] Write failing tests for dual-upload validation.
-- [ ] Port dual-upload UI.
-- [ ] Port behavior report API route.
-- [ ] Port report normalization logic.
-- [ ] Port IEP/504 comparison behavior.
-- [ ] Preserve output focus on missed supports, context, PDA-aware interpretation, and next steps.
-- [ ] Replace old product naming with PDA Behavior Report Help where user-facing.
+- [x] Inventory current behavior report flow and output schema.
+- [x] Preserve standalone route at `/tools/pda-behavior-report-help`.
+- [x] Write failing tests for dual-upload validation.
+- [x] Port dual-upload UI.
+- [x] Port behavior report API route.
+- [x] Port report normalization logic.
+- [x] Port IEP/504 comparison behavior.
+- [x] Preserve output focus on missed supports, context, PDA-aware interpretation, and next steps.
+- [x] Replace old product naming with PDA Behavior Report Help where user-facing.
 - [ ] Update migration inventory status when parity is verified.
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] Port or rewrite `tests/behavior-report.spec.ts`.
-- [ ] `npm run test:e2e` once behavior report e2e coverage exists.
-- [ ] Browser check valid behavior report plus IEP/504 upload.
-- [ ] Browser check invalid file rejection.
-- [ ] Browser check generated output is readable and printable.
-- [ ] Use `$playwright-cli` for upload smoke checks with fixtures and console/network inspection.
-- [ ] Use `$playwright-interactive` for final behavior report desktop and mobile visual QA.
-- [ ] Run security-focused review before public exposure of upload/API behavior.
-- [ ] Confirm this feature is not nested under PDA IEP Advice in navigation.
-- [ ] Confirm uploaded document content is not captured in analytics.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] Port or rewrite `tests/behavior-report.spec.ts`.
+- [x] `npm run test:e2e` once behavior report e2e coverage exists.
+- [x] Browser check valid behavior report plus IEP/504 upload.
+- [x] Browser check invalid file rejection.
+- [x] Browser check generated output is readable and printable.
+- [x] Use Playwright from the command line for upload smoke checks with fixtures and console/network inspection.
+- [x] Use in-app Browser plus Playwright for final behavior report desktop and mobile visual QA.
+- [x] Run security-focused review before public exposure of upload/API behavior.
+- [x] Confirm this feature is not nested under PDA IEP Advice in navigation.
+- [x] Confirm uploaded document content is not captured in analytics.
 
 ## Phase 7: Launch, SEO, Redirects, and Operational Readiness
 

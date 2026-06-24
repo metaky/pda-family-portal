@@ -31,6 +31,12 @@ export type PreflightedUpload = {
   extractedText: string;
 };
 
+export type PreflightedBehaviorReportUploads = {
+  behaviorReport: PreflightedUpload;
+  iepDocument: PreflightedUpload;
+  uploadPairHash: string;
+  combinedExtractedText: string;
+};
 
 function isPdf(buffer: Buffer) {
   return buffer.subarray(0, 5).toString("utf8") === "%PDF-";
@@ -237,6 +243,51 @@ export async function preflightPdfUpload(
   };
 }
 
+function getRequiredPdfUpload(
+  formData: FormData,
+  fieldName: "behaviorReport" | "iepDocument",
+) {
+  const value = formData.get(fieldName);
+  if (value instanceof File) {
+    return value;
+  }
+
+  if (fieldName === "behaviorReport") {
+    throw new PublicApiError(
+      "A behavior incident report PDF is required.",
+      400,
+      "BEHAVIOR_REPORT_REQUIRED",
+    );
+  }
+
+  throw new PublicApiError(
+    "An IEP or 504 PDF is required.",
+    400,
+    "IEP_DOCUMENT_REQUIRED",
+  );
+}
+
+export async function preflightBehaviorReportUploads(
+  formData: FormData,
+): Promise<PreflightedBehaviorReportUploads> {
+  const behaviorReport = await preflightPdfUpload(
+    getRequiredPdfUpload(formData, "behaviorReport"),
+  );
+  const iepDocument = await preflightPdfUpload(
+    getRequiredPdfUpload(formData, "iepDocument"),
+  );
+  const uploadPairHash = crypto
+    .createHash("sha256")
+    .update(`${behaviorReport.fileHash}:${iepDocument.fileHash}`)
+    .digest("hex");
+
+  return {
+    behaviorReport,
+    iepDocument,
+    uploadPairHash,
+    combinedExtractedText: `${behaviorReport.extractedText} ${iepDocument.extractedText}`,
+  };
+}
 
 export function assertLocalRelevance(extractedText: string) {
   const config = getServerConfig();

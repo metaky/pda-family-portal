@@ -5,7 +5,7 @@ import { getServerConfig } from "@/lib/server/config";
 import { PublicApiError } from "@/lib/server/errors";
 import { getSecurityStore } from "@/lib/server/security-store";
 
-type RoutePurpose = "analyze";
+export type RoutePurpose = "analyze" | "behavior-report";
 
 type VerifiedSessionRecord = {
   id: string;

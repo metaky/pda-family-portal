@@ -62,3 +62,35 @@ export interface StoredAnalyzeHistoryEntry {
   score: number;
   fullReport?: AnalyzeReport;
 }
+
+export interface BehaviorGuidanceItem {
+  title: string;
+  description: string;
+  quote?: string;
+  page?: number;
+  source?: "IEP" | "BIR";
+}
+
+export interface PdaConsideration {
+  strategy: string;
+  explanation: string;
+  howToImplement: string;
+}
+
+export interface BehaviorReportAnalysis {
+  summary: string;
+  whatWentWell: string[];
+  whatCouldBeBetter: string[];
+  iepGuidance: BehaviorGuidanceItem[];
+  futureRecommendations: string[];
+  pdaConsiderations: PdaConsideration[];
+}
+
+export interface StoredBehaviorHistoryEntry {
+  id: string;
+  timestamp: number;
+  behaviorFileName: string;
+  iepFileName: string;
+  summary: string;
+  fullReport?: BehaviorReportAnalysis;
+}

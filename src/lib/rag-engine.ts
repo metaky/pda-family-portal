@@ -1,10 +1,16 @@
 import fs from "fs";
 import path from "path";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import type { AnalyzeReport } from "@/lib/server/api-types";
+import type {
+  AnalyzeReport,
+  BehaviorReportAnalysis,
+} from "@/lib/server/api-types";
 import { PublicApiError } from "@/lib/server/errors";
 import { getServerConfig } from "@/lib/server/config";
-import { MOCK_ANALYZE_REPORT } from "@/lib/server/mock-analysis";
+import {
+  MOCK_ANALYZE_REPORT,
+  MOCK_BEHAVIOR_REPORT,
+} from "@/lib/server/mock-analysis";
 import { extractPdfText } from "@/lib/server/uploads";
 import {
   isAnalyzeFindingCategory,
@@ -200,6 +206,84 @@ export function parseAnalyzeReportResponse(text: string): AnalyzeReport {
   }
 
   return report;
+}
+
+function assertBehaviorReportAnalysis(value: unknown): BehaviorReportAnalysis {
+  if (!value || typeof value !== "object") {
+    throw new PublicApiError(
+      "Model response is invalid.",
+      503,
+      "INVALID_MODEL_RESPONSE",
+      true,
+    );
+  }
+
+  const record = value as Record<string, unknown>;
+  const iepGuidance = Array.isArray(record.iepGuidance) ? record.iepGuidance : [];
+  const pdaConsiderations = Array.isArray(record.pdaConsiderations)
+    ? record.pdaConsiderations
+    : [];
+
+  return {
+    summary: assertString(record.summary, "summary"),
+    whatWentWell: assertStringArray(record.whatWentWell, "whatWentWell"),
+    whatCouldBeBetter: assertStringArray(
+      record.whatCouldBeBetter,
+      "whatCouldBeBetter",
+    ),
+    iepGuidance: iepGuidance.map((item) => {
+      if (!item || typeof item !== "object") {
+        throw new PublicApiError(
+          "Model response contains invalid guidance.",
+          503,
+          "INVALID_MODEL_RESPONSE",
+          true,
+        );
+      }
+
+      const typed = item as Record<string, unknown>;
+      return {
+        title: assertString(typed.title, "iepGuidance.title"),
+        description: assertString(typed.description, "iepGuidance.description"),
+        quote: typeof typed.quote === "string" ? typed.quote : undefined,
+        page:
+          typeof typed.page === "number" && Number.isFinite(typed.page)
+            ? typed.page
+            : undefined,
+        source:
+          typed.source === "IEP" || typed.source === "BIR"
+            ? typed.source
+            : undefined,
+      };
+    }),
+    futureRecommendations: assertStringArray(
+      record.futureRecommendations,
+      "futureRecommendations",
+    ),
+    pdaConsiderations: pdaConsiderations.map((item) => {
+      if (!item || typeof item !== "object") {
+        throw new PublicApiError(
+          "Model response contains invalid PDA guidance.",
+          503,
+          "INVALID_MODEL_RESPONSE",
+          true,
+        );
+      }
+
+      const typed = item as Record<string, unknown>;
+      return {
+        strategy: assertString(typed.strategy, "pdaConsiderations.strategy"),
+        explanation: assertString(
+          typed.explanation,
+          "pdaConsiderations.explanation",
+        ),
+        howToImplement: assertString(
+          typed.howToImplement,
+          "pdaConsiderations.howToImplement",
+        ),
+      };
+    }),
+  };
 }
 
 export class RagEngine {
@@ -473,4 +557,109 @@ Return strict JSON:
     }
   }
 
+  async analyzeBehaviorReport(
+    behaviorBuffer: Buffer,
+    iepBuffer: Buffer,
+    mimeType: string,
+  ): Promise<BehaviorReportAnalysis> {
+    const config = getServerConfig();
+    if (config.mockMode) {
+      return MOCK_BEHAVIOR_REPORT;
+    }
+
+    const context = await this.retrieve(
+      "PDA behavior incident de-escalation autonomy anxiety regulation",
+      10,
+    );
+    const contextSummary = context
+      .map((chunk) => `- ${chunk.content} (Source: ${chunk.source})`)
+      .join("\n");
+
+    const prompt = `
+You are an expert special education advocate specializing in PDA-related school behavior incidents.
+You are reviewing two PDFs:
+1. A behavior incident report describing what happened at school.
+2. The student's IEP or 504 document describing supports that should guide staff response.
+
+PDA GUIDANCE:
+${contextSummary}
+
+TASK:
+1. Read both documents carefully and compare the incident response to the supports the student should have received.
+2. Explain what staff did well, what they missed, and which IEP/504 strategies should have been used in the moment.
+3. Provide recommendations that are specific to PDA, autonomy, anxiety reduction, and collaborative support.
+4. Go beyond generic autism advice; explicitly avoid compliance-first, ABA-style, punitive, or reward/punishment-based framing.
+5. Quote the source document directly whenever possible and include page numbers whenever they are detectable.
+
+DEPTH REQUIREMENTS:
+- Write a summary that is 2-4 sentences and clearly distinguishes the incident from the support failure or success.
+- Return at least 2 whatWentWell items when evidence exists.
+- Return at least 3 whatCouldBeBetter items when evidence exists.
+- Return at least 3 iepGuidance items when the IEP contains enough relevant supports.
+- Return at least 3 futureRecommendations and at least 3 pdaConsiderations when the documents contain enough evidence.
+
+QUALITY BAR:
+- The most useful output is concrete, parent-usable, and school-usable.
+- Explain exactly how a support should have been applied during the incident, not just that it existed.
+- PDA-specific recommendations should focus on reducing threat, preserving autonomy, supporting regulation, and repairing trust.
+- Do not invent facts that are not grounded in the two PDFs.
+- If the school's response escalated distress, say so clearly and explain why.
+
+Return strict JSON:
+{
+  "summary": "2-4 sentence executive summary written for a parent",
+  "whatWentWell": ["Specific positive aspect 1", "Specific positive aspect 2"],
+  "whatCouldBeBetter": ["Specific missed support 1", "Specific missed support 2", "Specific missed support 3"],
+  "iepGuidance": [
+    {
+      "title": "Accommodation or strategy",
+      "description": "How this support should have been applied during the incident and why it matters",
+      "quote": "Exact quote",
+      "page": 1,
+      "source": "IEP"
+    }
+  ],
+  "futureRecommendations": ["Clear future action 1", "Clear future action 2", "Clear future action 3"],
+  "pdaConsiderations": [
+    {
+      "strategy": "Name",
+      "explanation": "Why it helps PDA students specifically",
+      "howToImplement": "Concrete implementation steps for school staff"
+    }
+  ]
+}
+`;
+
+    try {
+      const result = await this.getModel().generateContent([
+        prompt,
+        {
+          inlineData: {
+            data: behaviorBuffer.toString("base64"),
+            mimeType,
+          },
+        },
+        {
+          inlineData: {
+            data: iepBuffer.toString("base64"),
+            mimeType,
+          },
+        },
+      ]);
+      return assertBehaviorReportAnalysis(
+        parseJsonObject((await result.response).text()),
+      );
+    } catch (error) {
+      if (error instanceof PublicApiError) {
+        throw error;
+      }
+
+      throw new PublicApiError(
+        "Behavior report analysis is temporarily unavailable.",
+        503,
+        "ANALYSIS_UNAVAILABLE",
+        true,
+      );
+    }
+  }
 }
