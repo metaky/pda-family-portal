@@ -101,6 +101,25 @@ test.describe("Support Sheet Builder", () => {
     expect(viewport.clippedTextareas).toEqual([]);
   });
 
+  test("context starters tune the form without replacing child details", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium", "desktop context starter check only");
+
+    await page.goto("/tools/support-sheet-builder");
+    await page.getByLabel("Child name or nickname").fill("Taylor");
+    await page.getByRole("button", { name: /Use Appointment context/i }).click();
+
+    await expect(page.getByLabel("Child name or nickname")).toHaveValue("Taylor");
+    await page.getByRole("button", { name: /Generate support sheet/i }).click();
+
+    await expect(page.getByLabel("Support sheet subtitle")).toHaveValue(/Appointment support/);
+    await expect(page.getByRole("textbox", { name: "What Helps", exact: true })).toHaveValue(
+      /Consent checks/,
+    );
+    await expect(page.getByRole("textbox", { name: "Please Avoid", exact: true })).toHaveValue(
+      /without previewing and checking consent/,
+    );
+  });
+
   test("print output fits common one-page paper sizes", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "chromium", "desktop print layout check only");
 

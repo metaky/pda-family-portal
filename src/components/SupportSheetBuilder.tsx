@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import {
   addToolUrlToSupportSheetDraft,
+  applySupportSheetContextPreset,
   audienceOptions,
   avoidOptions,
   createInitialSupportSheetDraft,
@@ -24,6 +25,7 @@ import {
   escalationOptions,
   helpOptions,
   recoveryOptions,
+  supportSheetContextPresets,
   supportSheetPresets,
   type AudienceKey,
   type EditableSupportSheetDraft,
@@ -217,6 +219,13 @@ export function SupportSheetBuilder() {
     setCopied(null);
   }
 
+  function applyContextPreset(presetId: (typeof supportSheetContextPresets)[number]["id"]) {
+    setAnswers((current) => applySupportSheetContextPreset(current, presetId));
+    setGenerated(false);
+    setActiveTab("sheet");
+    setCopied(null);
+  }
+
   async function copyText(label: string, text: string) {
     await navigator.clipboard.writeText(text);
     setCopied(label);
@@ -319,6 +328,26 @@ export function SupportSheetBuilder() {
                   type="button"
                 >
                   <strong>{preset.label}</strong>
+                  <span>{preset.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="group-label">Optional context starters</div>
+            <p className="small-copy" style={{ margin: 0 }}>
+              Keep the child details you entered and tune the support language for a common moment.
+            </p>
+            <div className="preset-grid">
+              {supportSheetContextPresets.map((preset) => (
+                <button
+                  className="preset-button"
+                  key={preset.id}
+                  onClick={() => applyContextPreset(preset.id)}
+                  type="button"
+                >
+                  <strong>Use {preset.label} context</strong>
                   <span>{preset.description}</span>
                 </button>
               ))}

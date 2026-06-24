@@ -3,8 +3,10 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import {
   addToolUrlToSupportSheetDraft,
+  applySupportSheetContextPreset,
   createInitialSupportSheetDraft,
   generateSupportSheetOutputs,
+  supportSheetContextPresets,
   supportSheetPresets,
   type SupportSheetAnswers,
 } from "../src/lib/support-sheet";
@@ -118,6 +120,32 @@ describe("support sheet generator", () => {
       expect(preset.answers.child.name).toMatch(/^(Riley|Jordan|Avery|Morgan|Casey)$/);
       expect(preset.answers.customNotes).not.toContain("Sam");
     }
+  });
+
+  it("applies optional context starters without replacing child details", () => {
+    expect(supportSheetContextPresets.map((preset) => preset.id)).toEqual([
+      "school_year",
+      "appointment",
+      "activity",
+    ]);
+
+    const schoolYear = applySupportSheetContextPreset(baseAnswers, "school_year");
+    const appointment = applySupportSheetContextPreset(baseAnswers, "appointment");
+    const activity = applySupportSheetContextPreset(baseAnswers, "activity");
+
+    expect(schoolYear.child).toEqual(baseAnswers.child);
+    expect(schoolYear.audience).toBe("teacher");
+    expect(schoolYear.helps).toContain("previewing");
+    expect(schoolYear.sectionNotes.about).toContain("school year");
+    expect(schoolYear.sectionNotes.escalationPlan).toBe(baseAnswers.sectionNotes.escalationPlan);
+
+    expect(appointment.audience).toBe("medical");
+    expect(appointment.helps).toContain("opt_out");
+    expect(appointment.sectionNotes.helps).toMatch(/consent/i);
+
+    expect(activity.audience).toBe("activity");
+    expect(activity.helps).toContain("trusted_adult");
+    expect(activity.sectionNotes.recovery).toContain("rejoin");
   });
 
   it("does not introduce a Support Sheet Builder API route or server persistence path", () => {

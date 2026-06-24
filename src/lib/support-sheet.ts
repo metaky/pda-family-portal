@@ -86,6 +86,24 @@ export type SupportSheetPreset = {
   answers: SupportSheetAnswers;
 };
 
+export type SupportSheetContextPreset = {
+  id: "school_year" | "appointment" | "activity";
+  label: string;
+  description: string;
+  audience: AudienceKey;
+  updates: {
+    helps?: string[];
+    demands?: string[];
+    distressSigns?: string[];
+    avoid?: string[];
+    escalationPlan?: string[];
+    recovery?: string[];
+    contactNote?: string;
+    customNotes?: string;
+    sectionNotes?: Partial<Record<SupportSheetSectionKey, string>>;
+  };
+};
+
 export const audienceOptions: AudienceOption[] = [
   {
     id: "teacher",
@@ -414,12 +432,120 @@ function withSectionNote(items: string[], note?: string) {
   return trimmed ? [...items, trimmed] : items;
 }
 
+function mergeUnique(current: string[], additions: string[] = []) {
+  return Array.from(new Set([...current, ...additions]));
+}
+
+function mergeSectionNotes(
+  current: Partial<Record<SupportSheetSectionKey, string>>,
+  additions: Partial<Record<SupportSheetSectionKey, string>> = {},
+) {
+  const merged = { ...current };
+
+  for (const [key, value] of Object.entries(additions) as Array<
+    [SupportSheetSectionKey, string]
+  >) {
+    const trimmedValue = value.trim();
+    const currentValue = merged[key]?.trim();
+
+    if (!trimmedValue) {
+      continue;
+    }
+
+    merged[key] = currentValue ? `${currentValue} ${trimmedValue}` : trimmedValue;
+  }
+
+  return merged;
+}
+
 export function createInitialSupportSheetDraft(
   answers: SupportSheetAnswers,
 ): EditableSupportSheetDraft {
   return {
     ...generateSupportSheetOutputs(answers),
     updatedAt: new Date().toISOString(),
+  };
+}
+
+export const supportSheetContextPresets: SupportSheetContextPreset[] = [
+  {
+    id: "school_year",
+    label: "New school year",
+    description: "Start a teacher handoff for a new class, teacher, or school routine.",
+    audience: "teacher",
+    updates: {
+      helps: ["previewing", "trusted_adult", "opt_out"],
+      demands: ["unexpected_transitions", "performance_praise"],
+      avoid: ["public_consequences", "surprise_changes"],
+      sectionNotes: {
+        about:
+          "This is meant to help the school year start with shared context before stress patterns become familiar.",
+        helps:
+          "A private preview of schedule changes, adult swaps, or new expectations can prevent many hard moments.",
+      },
+    },
+  },
+  {
+    id: "appointment",
+    label: "Appointment",
+    description: "Shape the sheet for a doctor, dentist, therapy, or evaluation visit.",
+    audience: "medical",
+    updates: {
+      helps: ["previewing", "choices", "reduced_language", "opt_out"],
+      demands: ["physical_prompting", "too_many_questions"],
+      distressSigns: ["freezes", "pain_illness"],
+      avoid: ["touching_without_consent", "you_have_to"],
+      escalationPlan: ["neutral_reset", "wait_try_again"],
+      sectionNotes: {
+        helps:
+          "Consent checks, step-by-step previewing, and permission to pause usually protect participation.",
+        avoid:
+          "Please do not touch, move, or begin a procedure without previewing and checking consent unless safety requires it.",
+      },
+    },
+  },
+  {
+    id: "activity",
+    label: "Activity or camp",
+    description: "Tune the note for practices, camps, clubs, lessons, or group activities.",
+    audience: "activity",
+    updates: {
+      helps: ["humor", "trusted_adult", "opt_out"],
+      demands: ["public_correction", "being_watched", "performance_praise"],
+      distressSigns: ["silly_disruptive", "louder", "leaves_area"],
+      avoid: ["public_consequences", "power_struggle"],
+      escalationPlan: ["create_space", "choices_no_answer"],
+      recovery: ["preferred_interest", "try_later", "reconnect_without_shame"],
+      sectionNotes: {
+        recovery:
+          "A neutral break makes it more likely they can rejoin later without shame or a big conversation.",
+      },
+    },
+  },
+];
+
+export function applySupportSheetContextPreset(
+  answers: SupportSheetAnswers,
+  presetId: SupportSheetContextPreset["id"],
+): SupportSheetAnswers {
+  const preset = supportSheetContextPresets.find((item) => item.id === presetId);
+
+  if (!preset) {
+    return answers;
+  }
+
+  return {
+    ...answers,
+    audience: preset.audience,
+    helps: mergeUnique(answers.helps, preset.updates.helps),
+    demands: mergeUnique(answers.demands, preset.updates.demands),
+    distressSigns: mergeUnique(answers.distressSigns, preset.updates.distressSigns),
+    avoid: mergeUnique(answers.avoid, preset.updates.avoid),
+    escalationPlan: mergeUnique(answers.escalationPlan, preset.updates.escalationPlan),
+    recovery: mergeUnique(answers.recovery, preset.updates.recovery),
+    contactNote: preset.updates.contactNote ?? answers.contactNote,
+    customNotes: preset.updates.customNotes ?? answers.customNotes,
+    sectionNotes: mergeSectionNotes(answers.sectionNotes, preset.updates.sectionNotes),
   };
 }
 

@@ -519,7 +519,7 @@ Goal: Improve output quality without turning the product into a tracker, dashboa
 - [ ] If local saving is added, clearly label it as stored on the user's device.
 - [ ] Add optional "help me word this better" assistance only after template-first behavior is solid.
 - [ ] Add stronger audience-specific template variations.
-- [ ] Add optional school-year, appointment, or activity-context presets.
+- [x] Add optional school-year, appointment, or activity-context presets.
 - [ ] Add user-editable tone controls if they improve output without adding complexity.
 
 Verification:
