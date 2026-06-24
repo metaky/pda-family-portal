@@ -78,6 +78,14 @@ Analytics events must not record:
 - Typed phrases in the Declarative Language Translator.
 - Generated translations, support sheets, IEP analysis, or behavior report analysis.
 
+The portal currently emits these as sanitized browser events named
+`pda-portal-analytics`. No external analytics provider is connected yet. If a
+provider is added later, it should subscribe only to that sanitized event shape
+or an equivalent allowlisted server contract.
+
+Donation links are wired through `NEXT_PUBLIC_DONATION_URL`, but the final live
+Stripe or payment destination still needs to be chosen and configured.
+
 ## Redirect Planning
 
 Old standalone tools can remain live during transition. Before switching old URLs, decide for each source product whether the old URL should:

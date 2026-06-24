@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { HumanVerificationPanel } from "@/components/HumanVerificationPanel";
 import { UploadZone } from "@/components/UploadZone";
+import { trackPortalEvent } from "@/lib/client/analytics";
+import { getDonationHref, isExternalDonationHref } from "@/lib/client/donation";
 import { getSecurityHeaders } from "@/lib/client/security";
 import type {
   AnalyzeFindingCategory,
@@ -48,6 +50,8 @@ export function PdaIepAnalyzer() {
   const [pendingSubmission, setPendingSubmission] =
     useState<PendingSubmission | null>(null);
   const [verificationOpen, setVerificationOpen] = useState(false);
+  const donationHref = getDonationHref();
+  const donationExternal = isExternalDonationHref(donationHref);
 
   const groupedFindings = useMemo(() => {
     if (!result) {
@@ -104,6 +108,11 @@ export function PdaIepAnalyzer() {
 
       if (data.ok) {
         setResult(data.data);
+        trackPortalEvent("pda_iep_analyze", {
+          action: "analyze",
+          status: "success",
+          tool: "pda_iep_advice",
+        });
         return;
       }
 
@@ -126,8 +135,18 @@ export function PdaIepAnalyzer() {
       }
 
       setError(data.message);
+      trackPortalEvent("pda_iep_analyze", {
+        action: "analyze",
+        status: "error",
+        tool: "pda_iep_advice",
+      });
     } catch {
       setError("The analysis service could not be reached. Please try again.");
+      trackPortalEvent("pda_iep_analyze", {
+        action: "analyze",
+        status: "error",
+        tool: "pda_iep_advice",
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -236,7 +255,13 @@ export function PdaIepAnalyzer() {
               </div>
               <button
                 className="button button-secondary no-print"
-                onClick={() => window.print()}
+                onClick={() => {
+                  trackPortalEvent("pda_iep_print", {
+                    action: "print",
+                    tool: "pda_iep_advice",
+                  });
+                  window.print();
+                }}
                 type="button"
               >
                 <Printer size={16} /> Print or save
@@ -324,7 +349,18 @@ export function PdaIepAnalyzer() {
                   Donations support practical tools for the next parent.
                 </p>
               </div>
-              <a className="button button-coral" href="/donate">
+              <a
+                className="button button-coral"
+                href={donationHref}
+                onClick={() =>
+                  trackPortalEvent("donation_click", {
+                    source: "pda_iep_advice",
+                    target: "donation",
+                  })
+                }
+                rel={donationExternal ? "noreferrer" : undefined}
+                target={donationExternal ? "_blank" : undefined}
+              >
                 Donate
               </a>
             </div>

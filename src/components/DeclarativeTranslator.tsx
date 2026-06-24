@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   Check,
@@ -20,6 +19,8 @@ import type {
   TranslatorTone,
   VariationKind,
 } from "@/lib/declarative-translator";
+import { trackPortalEvent } from "@/lib/client/analytics";
+import { getDonationHref, isExternalDonationHref } from "@/lib/client/donation";
 
 type TranslationWithId = Translation & { id: string };
 type VariationCache = Partial<Record<VariationKind, TranslationWithId[]>>;
@@ -217,6 +218,8 @@ export function DeclarativeTranslator() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
+  const donationHref = getDonationHref();
+  const donationExternal = isExternalDonationHref(donationHref);
 
   useEffect(() => {
     setHistoryItems(loadHistory());
@@ -288,7 +291,21 @@ export function DeclarativeTranslator() {
         useFewerWords,
         variations: {},
       });
+      trackPortalEvent("declarative_generate", {
+        action: "generate",
+        mode: "translate",
+        status: "success",
+        tone,
+        tool: "declarative_language_translator",
+      });
     } catch (caught) {
+      trackPortalEvent("declarative_generate", {
+        action: "generate",
+        mode: "translate",
+        status: "error",
+        tone,
+        tool: "declarative_language_translator",
+      });
       setError(caught instanceof Error ? caught.message : "The translator could not create ideas.");
     } finally {
       setIsLoading(false);
@@ -362,7 +379,19 @@ export function DeclarativeTranslator() {
         ...current,
         [item.id]: { error: null, isLoading: false, selectedKind: variationKind },
       }));
+      trackPortalEvent("declarative_variation", {
+        action: "variation",
+        status: "success",
+        tool: "declarative_language_translator",
+        variationKind,
+      });
     } catch (caught) {
+      trackPortalEvent("declarative_variation", {
+        action: "variation",
+        status: "error",
+        tool: "declarative_language_translator",
+        variationKind,
+      });
       setVariationStates((current) => ({
         ...current,
         [item.id]: {
@@ -378,6 +407,13 @@ export function DeclarativeTranslator() {
     await navigator.clipboard.writeText(value);
     setCopied(label);
     setTimeout(() => setCopied(null), 1800);
+    trackPortalEvent(
+      label === "variation" ? "declarative_copy_variation" : "declarative_copy_suggestion",
+      {
+        action: "copy",
+        tool: "declarative_language_translator",
+      },
+    );
   }
 
   function selectHistory(item: HistoryItem) {
@@ -685,10 +721,21 @@ export function DeclarativeTranslator() {
                 PDA Family Tools is donation-supported. No premium tier, no account wall.
               </p>
             </div>
-            <Link className="button button-coral" href="/donate">
+            <a
+              className="button button-coral"
+              href={donationHref}
+              onClick={() =>
+                trackPortalEvent("donation_click", {
+                  source: "declarative_language_translator",
+                  target: "donation",
+                })
+              }
+              rel={donationExternal ? "noreferrer" : undefined}
+              target={donationExternal ? "_blank" : undefined}
+            >
               <Heart size={18} aria-hidden="true" />
               Donate
-            </Link>
+            </a>
           </div>
         ) : null}
       </section>

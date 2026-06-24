@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
-import { createPageMetadata } from "@/lib/site";
+import { createPageMetadata, getDonationUrl } from "@/lib/site";
 
 export const metadata = createPageMetadata({
   title: "Keep PDA Family Tools Free",
@@ -10,6 +10,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function DonatePage() {
+  const donationUrl = getDonationUrl();
+
   return (
     <PortalShell>
       <section className="panel">
@@ -23,6 +25,20 @@ export default function DonatePage() {
           If this saved you an hour of emotional labor, you can help keep it free
           for the next parent.
         </p>
+        {donationUrl ? (
+          <a
+            className="button button-coral"
+            href={donationUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Heart size={16} /> Open donation page
+          </a>
+        ) : (
+          <p className="small-copy">
+            The live donation destination will be connected before launch.
+          </p>
+        )}
       </section>
       <Footer />
     </PortalShell>

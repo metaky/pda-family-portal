@@ -10,12 +10,16 @@ import {
   MessageCircle,
   Sprout,
 } from "lucide-react";
+import { trackPortalEvent } from "@/lib/client/analytics";
+import { getDonationHref, isExternalDonationHref } from "@/lib/client/donation";
 import { tools } from "@/lib/tools";
 
 const icons = [MessageCircle, ClipboardList, FileSearch, HandHeart];
 
 export function PortalShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const donationHref = getDonationHref();
+  const donationExternal = isExternalDonationHref(donationHref);
 
   return (
     <div className="portal-shell">
@@ -31,9 +35,20 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <Link href="/#tools">Tools</Link>
           <Link href="/about">About</Link>
           <Link href="/migration-inventory">Migration</Link>
-          <Link className="donate-link" href="/donate">
+          <a
+            className="donate-link"
+            href={donationHref}
+            onClick={() =>
+              trackPortalEvent("donation_click", {
+                source: "top_navigation",
+                target: "donation",
+              })
+            }
+            rel={donationExternal ? "noreferrer" : undefined}
+            target={donationExternal ? "_blank" : undefined}
+          >
             <Heart size={16} /> Donate
-          </Link>
+          </a>
         </nav>
       </header>
       <div className="layout">

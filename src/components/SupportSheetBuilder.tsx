@@ -31,6 +31,8 @@ import {
   type SupportSheetAnswers,
   type SupportSheetSectionKey,
 } from "@/lib/support-sheet";
+import { trackPortalEvent } from "@/lib/client/analytics";
+import { getDonationHref, isExternalDonationHref } from "@/lib/client/donation";
 import { audienceQuickStarts } from "@/lib/tools";
 
 type ArrayField =
@@ -129,6 +131,8 @@ export function SupportSheetBuilder() {
   const [generated, setGenerated] = useState(false);
   const [activeTab, setActiveTab] = useState<OutputTab>("sheet");
   const [copied, setCopied] = useState<string | null>(null);
+  const donationHref = getDonationHref();
+  const donationExternal = isExternalDonationHref(donationHref);
 
   const audience = useMemo(
     () => audienceOptions.find((option) => option.id === answers.audience) ?? audienceOptions[0],
@@ -180,6 +184,11 @@ export function SupportSheetBuilder() {
     );
     setGenerated(true);
     setActiveTab("sheet");
+    trackPortalEvent("support_sheet_generate", {
+      action: "generate",
+      audience: answers.audience,
+      tool: "support_sheet_builder",
+    });
   }
 
   function reset() {
@@ -212,6 +221,18 @@ export function SupportSheetBuilder() {
     await navigator.clipboard.writeText(text);
     setCopied(label);
     setTimeout(() => setCopied(null), 1800);
+    if (label === "email") {
+      trackPortalEvent("support_sheet_copy_email", {
+        action: "copy",
+        tool: "support_sheet_builder",
+      });
+    }
+    if (label === "short") {
+      trackPortalEvent("support_sheet_copy_short_text", {
+        action: "copy",
+        tool: "support_sheet_builder",
+      });
+    }
   }
 
   async function shareTool() {
@@ -220,6 +241,10 @@ export function SupportSheetBuilder() {
     await navigator.clipboard.writeText(toolUrl);
     setCopied("tool link");
     setTimeout(() => setCopied(null), 1800);
+    trackPortalEvent("support_sheet_share", {
+      action: "share",
+      tool: "support_sheet_builder",
+    });
   }
 
   function updateSection(index: number, value: string) {
@@ -469,7 +494,17 @@ export function SupportSheetBuilder() {
           </div>
           <div className="cta-row" style={{ margin: 0 }}>
             {activeTab === "sheet" ? (
-              <button className="button button-secondary" onClick={() => window.print()} type="button">
+              <button
+                className="button button-secondary"
+                onClick={() => {
+                  trackPortalEvent("support_sheet_print", {
+                    action: "print",
+                    tool: "support_sheet_builder",
+                  });
+                  window.print();
+                }}
+                type="button"
+              >
                 <Printer size={16} /> Print / save
               </button>
             ) : null}
@@ -584,7 +619,18 @@ export function SupportSheetBuilder() {
                 Donation prompt appears only after generation.
               </p>
             </div>
-            <a className="button button-coral" href="/donate">
+            <a
+              className="button button-coral"
+              href={donationHref}
+              onClick={() =>
+                trackPortalEvent("donation_click", {
+                  source: "support_sheet_builder",
+                  target: "donation",
+                })
+              }
+              rel={donationExternal ? "noreferrer" : undefined}
+              target={donationExternal ? "_blank" : undefined}
+            >
               <Heart size={16} /> Donate to support
             </a>
             <button className="button button-secondary" onClick={shareTool} type="button">

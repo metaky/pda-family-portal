@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { DualUploadZone } from "@/components/DualUploadZone";
 import { HumanVerificationPanel } from "@/components/HumanVerificationPanel";
+import { trackPortalEvent } from "@/lib/client/analytics";
+import { getDonationHref, isExternalDonationHref } from "@/lib/client/donation";
 import { getSecurityHeaders } from "@/lib/client/security";
 import type {
   ApiResponse,
@@ -56,6 +58,8 @@ export function BehaviorReportAnalyzer({
   const [pendingSubmission, setPendingSubmission] =
     useState<PendingSubmission | null>(null);
   const [verificationOpen, setVerificationOpen] = useState(false);
+  const donationHref = getDonationHref();
+  const donationExternal = isExternalDonationHref(donationHref);
 
   const bothFilesReady = Boolean(behaviorReport && iepDocument);
   const featureUnavailable = maintenanceMode || !featureEnabled;
@@ -119,6 +123,11 @@ export function BehaviorReportAnalyzer({
 
       if (data.ok) {
         setResult(data.data);
+        trackPortalEvent("behavior_report_analyze", {
+          action: "analyze",
+          status: "success",
+          tool: "pda_behavior_report_help",
+        });
         return;
       }
 
@@ -141,8 +150,18 @@ export function BehaviorReportAnalyzer({
       }
 
       setError(data.message);
+      trackPortalEvent("behavior_report_analyze", {
+        action: "analyze",
+        status: "error",
+        tool: "pda_behavior_report_help",
+      });
     } catch {
       setError("The behavior report service could not be reached. Please try again.");
+      trackPortalEvent("behavior_report_analyze", {
+        action: "analyze",
+        status: "error",
+        tool: "pda_behavior_report_help",
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -263,7 +282,13 @@ export function BehaviorReportAnalyzer({
               </div>
               <button
                 className="button button-secondary no-print"
-                onClick={() => window.print()}
+                onClick={() => {
+                  trackPortalEvent("behavior_report_print", {
+                    action: "print",
+                    tool: "pda_behavior_report_help",
+                  });
+                  window.print();
+                }}
                 type="button"
               >
                 <Printer size={16} /> Print or save
@@ -336,7 +361,18 @@ export function BehaviorReportAnalyzer({
                   Donations support practical PDA tools for the next parent.
                 </p>
               </div>
-              <a className="button button-coral" href="/donate">
+              <a
+                className="button button-coral"
+                href={donationHref}
+                onClick={() =>
+                  trackPortalEvent("donation_click", {
+                    source: "pda_behavior_report_help",
+                    target: "donation",
+                  })
+                }
+                rel={donationExternal ? "noreferrer" : undefined}
+                target={donationExternal ? "_blank" : undefined}
+              >
                 Donate
               </a>
             </div>

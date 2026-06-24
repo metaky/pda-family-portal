@@ -461,8 +461,8 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 - [x] Add `llms.txt` or equivalent AI-readable project summary if useful.
 - [x] Add sitemap/robots handling.
 - [ ] Add live donation destination.
-- [ ] Add privacy-safe analytics events for generation, print/export, email copy, short-text copy, donation click, and share click.
-- [ ] Confirm analytics never captures child, school, document, typed phrase, or generated-output content.
+- [x] Add privacy-safe analytics events for generation, print/export, email copy, short-text copy, donation click, and share click.
+- [x] Confirm analytics never captures child, school, document, typed phrase, or generated-output content.
 - [x] Refactor the Declarative translator Gemini call to use the server-side SDK/header-based pattern so the API key is not placed in the outbound request URL.
 - [x] Create bridge/redirect plan for old Declarative App URLs.
 - [x] Create bridge/redirect plan for old PDA Your IEP URLs.
