@@ -487,7 +487,7 @@ Google Cloud deployment handoff:
 - [ ] Create Cloud Build trigger after the GitHub repository and preferred production branch are confirmed.
 - [x] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
 - [x] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
-- [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-987113251595.us-west1.run.app`.
+- [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-pdlcgpcnga-uw.a.run.app`.
 - [ ] Decide whether to add a custom domain.
 
 Resume commands once billing approval is confirmed:
