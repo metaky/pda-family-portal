@@ -1,5 +1,13 @@
 import { Footer, PortalShell } from "@/components/PortalShell";
 import { MigrationInventory } from "@/components/MigrationInventory";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "Migration Inventory",
+  description:
+    "Track how Declarative App and PDA Your IEP source features are being migrated into native PDA Family Tools portal routes.",
+  path: "/migration-inventory",
+});
 
 export default function MigrationInventoryPage() {
   return (

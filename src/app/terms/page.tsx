@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { AlertTriangle, FileText, HeartHandshake } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "Terms of Use",
+  description:
+    "Terms for using PDA Family Tools, including educational-use boundaries, document processing, AI output review, and donations.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

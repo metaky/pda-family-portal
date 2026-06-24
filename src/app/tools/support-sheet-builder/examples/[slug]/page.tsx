@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ClipboardList } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
 import {
   getSupportSheetExample,
   supportSheetExampleSlugs,
@@ -10,6 +11,29 @@ import {
 
 export function generateStaticParams() {
   return supportSheetExampleSlugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const example = getSupportSheetExample(slug);
+
+  if (!example) {
+    return createPageMetadata({
+      title: "Support Sheet Example",
+      description: "Preview a fictional PDA support sheet example.",
+      path: "/tools/support-sheet-builder/examples",
+    });
+  }
+
+  return createPageMetadata({
+    title: example.title,
+    description: example.summary,
+    path: `/tools/support-sheet-builder/examples/${example.slug}`,
+  });
 }
 
 export default async function SupportSheetExamplePage({

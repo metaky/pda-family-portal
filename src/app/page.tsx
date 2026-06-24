@@ -2,7 +2,15 @@ import Link from "next/link";
 import { ArrowRight, ClipboardList, ShieldCheck, Sparkles } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
 import { ToolCard } from "@/components/ToolCard";
+import { createPageMetadata } from "@/lib/site";
 import { tools } from "@/lib/tools";
+
+export const metadata = createPageMetadata({
+  title: "PDA Family Tools",
+  description:
+    "Free, practical PDA-aware tools for families, caregivers, and school advocacy.",
+  path: "/",
+});
 
 export default function HomePage() {
   return (

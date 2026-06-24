@@ -1,4 +1,12 @@
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "About PDA Family Tools",
+  description:
+    "Learn why PDA Family Tools helps families reduce repeated explaining, translating, and advocacy work.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

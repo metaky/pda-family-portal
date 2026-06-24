@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { FileSearch, ListChecks, ShieldCheck } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "PDA IEP Advice",
+  description:
+    "Review IEPs, 504 plans, accommodations, and school supports through a PDA-aware lens.",
+  path: "/tools/pda-iep-advice",
+});
 
 const sections = [
   {

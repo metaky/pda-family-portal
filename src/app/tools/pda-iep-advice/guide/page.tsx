@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, Heart, Shield, Sparkles } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "PDA IEP Advice: Guide",
+  description:
+    "Learn how PDA-aware IEP support shifts from compliance to connection, co-regulation, autonomy, and nervous-system safety.",
+  path: "/tools/pda-iep-advice/guide",
+});
 
 export default function PdaIepGuidePage() {
   return (

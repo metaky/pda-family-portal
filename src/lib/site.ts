@@ -1,5 +1,11 @@
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
+type PageMetadataInput = {
+  title: string;
+  description: string;
+  path: string;
+};
+
 export const portalRoutes = [
   "/",
   "/about",
@@ -46,4 +52,21 @@ export function getCanonicalUrl(pathname = "/") {
 
 export function getDonationUrl() {
   return normalizeUrl(process.env.NEXT_PUBLIC_DONATION_URL);
+}
+
+export function createPageMetadata({ title, description, path }: PageMetadataInput) {
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: path,
+    },
+    openGraph: {
+      title,
+      description,
+      url: path,
+      siteName: "PDA Family Tools",
+      type: "website",
+    },
+  } as const;
 }

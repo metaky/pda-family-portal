@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { ArrowRight, ClipboardList, ShieldCheck } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
 import { supportSheetExamples } from "@/lib/support-sheet-examples";
+
+export const metadata = createPageMetadata({
+  title: "Support Sheet Examples",
+  description:
+    "Preview fictional PDA support sheet examples before entering your own family details.",
+  path: "/tools/support-sheet-builder/examples",
+});
 
 export default function SupportSheetExamplesPage() {
   return (

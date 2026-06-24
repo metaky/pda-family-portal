@@ -457,18 +457,18 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 
 - [ ] Choose deployment target.
 - [x] Add production environment documentation.
-- [ ] Add canonical metadata for portal pages.
+- [x] Add canonical metadata for portal pages.
 - [x] Add `llms.txt` or equivalent AI-readable project summary if useful.
 - [x] Add sitemap/robots handling.
 - [ ] Add live donation destination.
 - [ ] Add privacy-safe analytics events for generation, print/export, email copy, short-text copy, donation click, and share click.
 - [ ] Confirm analytics never captures child, school, document, typed phrase, or generated-output content.
 - [x] Refactor the Declarative translator Gemini call to use the server-side SDK/header-based pattern so the API key is not placed in the outbound request URL.
-- [ ] Create bridge/redirect plan for old Declarative App URLs.
-- [ ] Create bridge/redirect plan for old PDA Your IEP URLs.
-- [ ] Create bridge/redirect plan for old behavior report URLs.
-- [ ] Add basic error monitoring plan.
-- [ ] Add maintenance-mode or feature-unavailable pattern if migrated AI/API features are temporarily unavailable.
+- [x] Create bridge/redirect plan for old Declarative App URLs.
+- [x] Create bridge/redirect plan for old PDA Your IEP URLs.
+- [x] Create bridge/redirect plan for old behavior report URLs.
+- [x] Add basic error monitoring plan.
+- [x] Add maintenance-mode or feature-unavailable pattern if migrated AI/API features are temporarily unavailable.
 
 Verification:
 
@@ -479,7 +479,7 @@ Verification:
 - [ ] Use `$playwright-cli` for production route smoke checks, console/network checks, and redirect validation.
 - [ ] Use `$playwright-interactive` for final launch visual QA on desktop and mobile.
 - [ ] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
-- [ ] Check canonical URLs in page metadata.
+- [x] Check canonical URLs in page metadata.
 - [ ] Check old URLs route to bridge or redirect pages when ready.
 - [ ] Confirm analytics payloads are privacy-safe.
 - [ ] Confirm donation links work.

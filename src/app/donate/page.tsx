@@ -1,5 +1,13 @@
 import { Heart } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "Keep PDA Family Tools Free",
+  description:
+    "Support PDA Family Tools so practical, low-burden PDA-aware resources can stay free for families.",
+  path: "/donate",
+});
 
 export default function DonatePage() {
   return (

@@ -6,6 +6,14 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "PDA IEP Advice: Accommodations",
+  description:
+    "Browse PDA-aware IEP accommodation ideas for language, flexibility, behavior support, scheduling, and school relationships.",
+  path: "/tools/pda-iep-advice/accommodations",
+});
 
 const accommodationSections = [
   {

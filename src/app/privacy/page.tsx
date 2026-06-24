@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { LockKeyhole, ShieldCheck, Trash2 } from "lucide-react";
 import { Footer, PortalShell } from "@/components/PortalShell";
+import { createPageMetadata } from "@/lib/site";
+
+export const metadata = createPageMetadata({
+  title: "Privacy and Safety",
+  description:
+    "Privacy details for PDA Family Tools, including uploaded document handling, analytics boundaries, and local Support Sheet Builder behavior.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
