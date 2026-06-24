@@ -19,7 +19,11 @@ Keep this open until the actual hosting account and public domain are selected.
 | Variable | Visibility | Required | Notes |
 | --- | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Public | Yes | Canonical site origin, no trailing slash. Example: `https://example.com`. |
-| `NEXT_PUBLIC_DONATION_URL` | Public | Before donation launch | Public donation destination. Leave unset until the live destination is chosen. |
+| `NEXT_PUBLIC_DONATION_URL` | Public | Optional | Legacy single donation destination. Prefer the tiered links below. |
+| `NEXT_PUBLIC_DONATION_SMALL_URL` | Public | Before donation launch | Public Stripe destination for the $3 one-time donation. |
+| `NEXT_PUBLIC_DONATION_LARGE_URL` | Public | Before donation launch | Public Stripe destination for the $8 one-time donation. |
+| `NEXT_PUBLIC_DONATION_CUSTOM_URL` | Public | Before donation launch | Public Stripe destination for custom one-time donations. |
+| `NEXT_PUBLIC_DONATION_MONTHLY_URL` | Public | Before donation launch | Public Stripe destination for $5 monthly donations. |
 | `GEMINI_API_KEY` | Secret | Yes for live AI routes | Server-only. Never use a `NEXT_PUBLIC_` prefix. |
 | `GEMINI_MODEL` | Server config | Optional | Defaults to the configured portal model. |
 | `TURNSTILE_SECRET_KEY` | Secret | Yes for protected upload routes | Server-side Cloudflare Turnstile verification secret. |
@@ -83,8 +87,12 @@ The portal currently emits these as sanitized browser events named
 provider is added later, it should subscribe only to that sanitized event shape
 or an equivalent allowlisted server contract.
 
-Donation links are wired through `NEXT_PUBLIC_DONATION_URL`, but the final live
-Stripe or payment destination still needs to be chosen and configured.
+Donation links are wired through tiered public Stripe destinations:
+
+- `NEXT_PUBLIC_DONATION_SMALL_URL`
+- `NEXT_PUBLIC_DONATION_LARGE_URL`
+- `NEXT_PUBLIC_DONATION_CUSTOM_URL`
+- `NEXT_PUBLIC_DONATION_MONTHLY_URL`
 
 ## Redirect Planning
 
@@ -107,7 +115,7 @@ Portal target routes:
 - Choose the final deployment target and public domain.
 - Configure production secrets in the hosting provider.
 - Replace local/test human-verification behavior with real Turnstile.
-- Decide the live donation destination.
+- Confirm live donation destinations in production.
 - Add privacy-safe analytics only after the event schema is reviewed.
 - Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - Smoke-test all production routes and redirects from a browser.

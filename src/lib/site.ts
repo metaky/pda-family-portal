@@ -6,6 +6,17 @@ type PageMetadataInput = {
   path: string;
 };
 
+export type DonationTier = {
+  id: "small" | "large" | "custom" | "monthly";
+  title: string;
+  amount: string;
+  cadence: string;
+  description: string;
+  buttonLabel: string;
+  envKey: string;
+  href: string | null;
+};
+
 export const portalRoutes = [
   "/",
   "/about",
@@ -52,6 +63,51 @@ export function getCanonicalUrl(pathname = "/") {
 
 export function getDonationUrl() {
   return normalizeUrl(process.env.NEXT_PUBLIC_DONATION_URL);
+}
+
+export function getDonationTiers(): DonationTier[] {
+  return [
+    {
+      id: "small",
+      title: "Small donation",
+      amount: "$3",
+      cadence: "One-time",
+      description: "A small one-time donation that helps keep the tools available.",
+      buttonLabel: "Donate $3",
+      envKey: "NEXT_PUBLIC_DONATION_SMALL_URL",
+      href: normalizeUrl(process.env.NEXT_PUBLIC_DONATION_SMALL_URL),
+    },
+    {
+      id: "large",
+      title: "Large donation",
+      amount: "$8",
+      cadence: "One-time",
+      description: "A larger one-time donation toward hosting and AI costs.",
+      buttonLabel: "Donate $8",
+      envKey: "NEXT_PUBLIC_DONATION_LARGE_URL",
+      href: normalizeUrl(process.env.NEXT_PUBLIC_DONATION_LARGE_URL),
+    },
+    {
+      id: "custom",
+      title: "Custom donation",
+      amount: "Custom",
+      cadence: "One-time",
+      description: "Choose the one-time amount that feels right for you.",
+      buttonLabel: "Choose amount",
+      envKey: "NEXT_PUBLIC_DONATION_CUSTOM_URL",
+      href: normalizeUrl(process.env.NEXT_PUBLIC_DONATION_CUSTOM_URL),
+    },
+    {
+      id: "monthly",
+      title: "Monthly donation",
+      amount: "$5",
+      cadence: "Monthly",
+      description: "Optional monthly support for recurring hosting and AI costs.",
+      buttonLabel: "Donate $5 monthly",
+      envKey: "NEXT_PUBLIC_DONATION_MONTHLY_URL",
+      href: normalizeUrl(process.env.NEXT_PUBLIC_DONATION_MONTHLY_URL),
+    },
+  ];
 }
 
 export function createPageMetadata({ title, description, path }: PageMetadataInput) {

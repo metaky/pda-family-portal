@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   getCanonicalUrl,
+  getDonationTiers,
   getDonationUrl,
   getPublicSiteUrl,
   portalRoutes,
@@ -10,6 +11,10 @@ const originalEnv = {
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   SITE_URL: process.env.SITE_URL,
   NEXT_PUBLIC_DONATION_URL: process.env.NEXT_PUBLIC_DONATION_URL,
+  NEXT_PUBLIC_DONATION_SMALL_URL: process.env.NEXT_PUBLIC_DONATION_SMALL_URL,
+  NEXT_PUBLIC_DONATION_LARGE_URL: process.env.NEXT_PUBLIC_DONATION_LARGE_URL,
+  NEXT_PUBLIC_DONATION_CUSTOM_URL: process.env.NEXT_PUBLIC_DONATION_CUSTOM_URL,
+  NEXT_PUBLIC_DONATION_MONTHLY_URL: process.env.NEXT_PUBLIC_DONATION_MONTHLY_URL,
 };
 
 afterEach(() => {
@@ -47,6 +52,29 @@ describe("site config", () => {
 
     vi.stubEnv("NEXT_PUBLIC_DONATION_URL", "https://buy.stripe.com/example");
     expect(getDonationUrl()).toBe("https://buy.stripe.com/example");
+  });
+
+  it("normalizes tiered donation destinations", () => {
+    vi.stubEnv("NEXT_PUBLIC_DONATION_SMALL_URL", "https://donate.stripe.com/small ");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_LARGE_URL", "https://donate.stripe.com/large/");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_CUSTOM_URL", "https://buy.stripe.com/custom");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_MONTHLY_URL", "https://donate.stripe.com/monthly");
+
+    expect(getDonationTiers()).toMatchObject([
+      { id: "small", href: "https://donate.stripe.com/small" },
+      { id: "large", href: "https://donate.stripe.com/large" },
+      { id: "custom", href: "https://buy.stripe.com/custom" },
+      { id: "monthly", href: "https://donate.stripe.com/monthly" },
+    ]);
+  });
+
+  it("keeps unconfigured donation tiers disabled", () => {
+    vi.stubEnv("NEXT_PUBLIC_DONATION_SMALL_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_LARGE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_CUSTOM_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_DONATION_MONTHLY_URL", "");
+
+    expect(getDonationTiers().every((tier) => tier.href === null)).toBe(true);
   });
 
   it("lists public canonical portal routes", () => {

@@ -314,6 +314,45 @@ button {
   padding: 24px;
 }
 
+.donation-choice-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.donation-choice {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: space-between;
+  min-height: 250px;
+  padding: 18px;
+}
+
+.donation-choice h2 {
+  margin-top: 12px;
+}
+
+.donation-choice .button {
+  width: 100%;
+}
+
+.donation-amount {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1;
+  margin: 14px 0 8px;
+}
+
+.donation-disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
 .form-stack {
   display: grid;
   gap: 22px;
@@ -1485,6 +1524,7 @@ button {
   }
 
   .tool-grid,
+  .donation-choice-grid,
   .example-card-grid,
   .field-grid,
   .preset-grid,

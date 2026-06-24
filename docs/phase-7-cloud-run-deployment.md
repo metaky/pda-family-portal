@@ -131,7 +131,7 @@ to expose, but they are still deployment configuration and should be deliberate.
 gcloud builds submit \
   --config cloudbuild.yaml \
   --project "$PROJECT_ID" \
-  --substitutions "_REGION=$REGION,_SERVICE_NAME=$SERVICE_NAME,_ARTIFACT_REPOSITORY=$ARTIFACT_REPOSITORY,_RUNTIME_SERVICE_ACCOUNT=$RUNTIME_SERVICE_ACCOUNT,_NEXT_PUBLIC_SITE_URL=https://your-domain.example,_NEXT_PUBLIC_DONATION_URL="
+  --substitutions "_REGION=$REGION,_SERVICE_NAME=$SERVICE_NAME,_ARTIFACT_REPOSITORY=$ARTIFACT_REPOSITORY,_RUNTIME_SERVICE_ACCOUNT=$RUNTIME_SERVICE_ACCOUNT,_NEXT_PUBLIC_SITE_URL=https://your-domain.example,_NEXT_PUBLIC_DONATION_SMALL_URL=https://donate.stripe.com/small,_NEXT_PUBLIC_DONATION_LARGE_URL=https://donate.stripe.com/large,_NEXT_PUBLIC_DONATION_CUSTOM_URL=https://buy.stripe.com/custom,_NEXT_PUBLIC_DONATION_MONTHLY_URL=https://donate.stripe.com/monthly"
 ```
 
 If using a Cloud Build GitHub trigger, configure the same substitutions in the
