@@ -117,5 +117,5 @@ Portal target routes:
 - Replace local/test human-verification behavior with real Turnstile.
 - Confirm live donation destinations in production.
 - Add privacy-safe analytics only after the event schema is reviewed.
-- Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
+- Review and resolve the Phase 7 threat model's launch-gate assumptions for shared security storage and edge upload body limits.
 - Smoke-test all production routes and redirects from a browser.

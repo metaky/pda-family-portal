@@ -474,17 +474,17 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e` once checked-in Playwright coverage exists.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] `npm run test:e2e` once checked-in Playwright coverage exists.
 - [ ] Browser check production deployment.
 - [ ] Use `$playwright-cli` for production route smoke checks, console/network checks, and redirect validation.
 - [ ] Use `$playwright-interactive` for final launch visual QA on desktop and mobile.
-- [ ] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
+- [x] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - [x] Check canonical URLs in page metadata.
 - [ ] Check old URLs route to bridge or redirect pages when ready.
-- [ ] Confirm analytics payloads are privacy-safe.
-- [ ] Confirm donation links work.
+- [x] Confirm analytics payloads are privacy-safe.
+- [x] Confirm donation links work.
 
 ## Phase 8: Better Personalization Without Daily Burden
 
