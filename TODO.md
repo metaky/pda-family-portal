@@ -434,7 +434,7 @@ Tasks:
 - [x] Port IEP/504 comparison behavior.
 - [x] Preserve output focus on missed supports, context, PDA-aware interpretation, and next steps.
 - [x] Replace old product naming with PDA Behavior Report Help where user-facing.
-- [ ] Update migration inventory status when parity is verified.
+- [x] Update migration inventory status when parity is verified.
 
 Verification:
 

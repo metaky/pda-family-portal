@@ -69,7 +69,7 @@ export const migrationInventory: MigrationInventoryItem[] = [
     portalRoute: "/tools/pda-behavior-report-help",
     sourceProject: "/Users/kyle.wegner/Antigravity",
     status:
-      "Native migration validated in local mock mode: standalone portal route, dual-upload validation, protected behavior-report API route, mock-mode RAG analysis, human verification purpose, browser-covered analyzer UI, and security review are in place. Live model parity remains open before this can be marked complete.",
+      "Native migration complete for local parity: standalone portal route, dual-upload validation, protected behavior-report API route, mock-mode and live Gemini RAG analysis, human verification purpose, browser-covered analyzer UI, and security review are in place. Production launch still needs deployment hardening and redirect planning.",
     sourceFiles: [
       "src/app/behavior-report/page.tsx",
       "src/components/behavior-report-page-client.tsx",
