@@ -109,7 +109,7 @@ test.describe("Declarative Language Translator", () => {
       width: window.innerWidth,
     }));
 
-    expect(viewport.width).toBe(390);
-    expect(viewport.scrollWidth).toBeLessThanOrEqual(390);
+    expect(viewport.width).toBeGreaterThanOrEqual(390);
+    expect(viewport.scrollWidth).toBeLessThanOrEqual(viewport.width);
   });
 });

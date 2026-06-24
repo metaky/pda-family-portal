@@ -366,37 +366,39 @@ Primary source files:
 
 Tasks:
 
-- [ ] Inventory current upload, PDF parsing, security, human verification, and history behavior.
-- [ ] Inventory current RAG docs, prompts, and response schema.
-- [ ] Decide which Antigravity modules can be copied as-is and which need portal adaptation.
-- [ ] Write failing tests for upload validation and API response shape.
-- [ ] Port server config and environment handling needed for analyzer routes.
-- [ ] Port upload validation and security protections.
-- [ ] Port RAG engine and source docs.
-- [ ] Port analyzer API route under portal route structure.
-- [ ] Port analyzer UI into `/tools/pda-iep-advice/analyze`.
-- [ ] Port accommodations page into `/tools/pda-iep-advice/accommodations`.
-- [ ] Port guide page into `/tools/pda-iep-advice/guide`.
-- [ ] Port privacy, terms, and disclaimer language into portal-level pages or shared components.
-- [ ] Replace old product naming with PDA IEP Advice where user-facing.
-- [ ] Update migration inventory status when parity is verified.
+- [x] Inventory current upload, PDF parsing, security, human verification, and history behavior.
+- [x] Inventory current RAG docs, prompts, and response schema.
+- [x] Decide which Antigravity modules can be copied as-is and which need portal adaptation.
+- [x] Write failing tests for upload validation and API response shape.
+- [x] Port server config and environment handling needed for analyzer routes.
+- [x] Port upload validation and security protections.
+- [x] Port RAG engine and source docs.
+- [x] Port analyzer API route under portal route structure.
+- [x] Port analyzer UI into `/tools/pda-iep-advice/analyze`.
+- [x] Make analyzer runnable in local mock mode with human verification/session flow.
+- [x] Port accommodations page into `/tools/pda-iep-advice/accommodations`.
+- [x] Port guide page into `/tools/pda-iep-advice/guide`.
+- [x] Port privacy, terms, and disclaimer language into portal-level pages or shared components.
+- [x] Replace old product naming with PDA IEP Advice where user-facing.
+- [x] Update migration inventory status when parity is verified.
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] Port or rewrite relevant Playwright tests from Antigravity.
-- [ ] `npm run test:e2e` once analyzer e2e coverage exists.
-- [ ] Browser check valid PDF upload.
-- [ ] Browser check invalid file rejection.
-- [ ] Browser check analyzer output is printable/readable.
-- [ ] Browser check accommodations route.
-- [ ] Browser check guide route.
-- [ ] Use `$playwright-cli` for upload smoke checks with fixtures and console/network inspection.
-- [ ] Use `$playwright-interactive` for final analyzer, accommodations, guide, desktop, and mobile visual QA.
-- [ ] Run security-focused review before public exposure of upload/API behavior.
-- [ ] Confirm uploaded document content is not captured in analytics.
-- [ ] Confirm privacy stance is at least as strong as the source app.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] Port or rewrite relevant Playwright tests from Antigravity.
+- [x] `npm run test:e2e` once analyzer e2e coverage exists.
+- [x] Browser check valid PDF upload.
+- [x] Browser check invalid file rejection.
+- [x] Browser check analyzer output is printable/readable.
+- [x] Browser check local mock analyzer verification and retry flow.
+- [x] Browser check accommodations route.
+- [x] Browser check guide route.
+- [x] Use Playwright from the command line for upload smoke checks with fixtures and console/network inspection.
+- [x] Use in-app Browser plus Playwright for final analyzer, accommodations, guide, desktop, and mobile visual QA.
+- [x] Run security-focused review before public exposure of upload/API behavior.
+- [x] Confirm uploaded document content is not captured in analytics.
+- [x] Confirm privacy stance is at least as strong as the source app.
 
 ## Phase 6: PDA Behavior Report Help Migration
 

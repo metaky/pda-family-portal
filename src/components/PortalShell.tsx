@@ -73,6 +73,8 @@ export function Footer() {
     <footer className="footer no-print">
       <span>PDA Family Tools is donation-supported and free to use.</span>
       <nav className="footer-links" aria-label="Resource links">
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/terms">Terms</Link>
         <a href="https://www.pdasociety.org.uk/" rel="noreferrer" target="_blank">
           PDA Society
         </a>

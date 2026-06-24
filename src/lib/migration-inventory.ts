@@ -38,7 +38,8 @@ export const migrationInventory: MigrationInventoryItem[] = [
     feature: "PDA IEP Advice",
     portalRoute: "/tools/pda-iep-advice",
     sourceProject: "/Users/kyle.wegner/Antigravity",
-    status: "Native route stubbed; analyzer migration pending.",
+    status:
+      "Native PDA IEP Advice suite migrated: source upload validation, safe API response shapes, server config, session/warning security helpers, local development verification, RAG source docs, prompt engine, strict analyzer response normalization, mock-mode output, portal analyzer API route, native analyzer UI, accommodations, guide, portal privacy/terms copy, browser QA, and security review are complete with Vitest and Playwright coverage; public launch still requires production session/rate-limit storage, edge upload body limits, and live model parity.",
     sourceFiles: [
       "src/app/analyze/page.tsx",
       "src/components/analyze-page-client.tsx",
