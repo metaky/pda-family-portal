@@ -478,11 +478,13 @@ Google Cloud deployment handoff:
 - [x] Set local gcloud defaults to project `pda-family-portal` and region `us-west1`.
 - [x] Confirm project number is `987113251595`.
 - [x] Submit Google billing quota increase request after `gcloud billing projects link` returned `Cloud billing quota exceeded`.
-- [ ] After billing approval, link project billing to `My Billing Account`; rediscover the account ID with `gcloud billing accounts list`.
-- [ ] After billing is linked, enable required APIs: Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloud Resource Manager, IAM, Logging, and Monitoring.
-- [ ] Create the Artifact Registry Docker repository in `us-west1` for Cloud Run images.
-- [ ] Create a least-privilege Cloud Run runtime service account.
-- [ ] Add production secrets to Secret Manager, including `GEMINI_API_KEY` and any production analytics secret if needed.
+- [x] After billing approval, link project billing to `My Billing Account`; rediscover the account ID with `gcloud billing accounts list`.
+- [x] After billing is linked, enable required APIs: Cloud Run, Cloud Build, Artifact Registry, Secret Manager, Cloud Resource Manager, IAM, Logging, and Monitoring.
+- [x] Create the Artifact Registry Docker repository in `us-west1` for Cloud Run images.
+- [x] Create a least-privilege Cloud Run runtime service account.
+- [x] Add `GEMINI_API_KEY` and `SESSION_SIGNING_SECRET` to Secret Manager and grant the Cloud Run runtime service account secret access.
+- [ ] Add Cloudflare Turnstile production site/secret keys before enabling upload-backed AI routes publicly.
+- [ ] Create Cloud Build trigger after the GitHub repository and preferred production branch are confirmed.
 - [ ] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
 - [ ] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
 - [ ] Verify the deployed Cloud Run URL, then decide whether to add a custom domain.
