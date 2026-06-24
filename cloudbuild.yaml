@@ -13,7 +13,7 @@ substitutions:
   _FEATURE_BEHAVIOR_REPORT_ENABLED: "false"
   _GEMINI_API_KEY_SECRET: GEMINI_API_KEY
   _SESSION_SIGNING_SECRET_SECRET: SESSION_SIGNING_SECRET
-  _RUNTIME_SERVICE_ACCOUNT: pda-family-tools-run@$PROJECT_ID.iam.gserviceaccount.com
+  _RUNTIME_SERVICE_ACCOUNT: pda-family-tools-run@pda-family-portal.iam.gserviceaccount.com
 
 steps:
   - name: gcr.io/cloud-builders/docker
