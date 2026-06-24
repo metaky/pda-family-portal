@@ -9,6 +9,16 @@ export default defineConfig({
   },
   webServer: {
     command: "npm run dev",
+    env: {
+      ...process.env,
+      DEV_USE_MOCK_TRANSLATIONS: "true",
+      FEATURE_BEHAVIOR_REPORT_ENABLED: "true",
+      FEATURE_PDA_IEP_ANALYZE_ENABLED: "true",
+      MAINTENANCE_MODE: "false",
+      RAG_MOCK_MODE: "true",
+      SECURITY_ALLOW_TEST_TOKENS: "true",
+      SECURITY_USE_MEMORY_STORE: "true",
+    },
     url: "http://127.0.0.1:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

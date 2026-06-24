@@ -1,0 +1,15 @@
+# PDA Family Tools
+
+PDA Family Tools is a no-login portal of practical PDA-aware tools for families, caregivers, and school advocacy.
+
+Primary routes:
+- /tools/support-sheet-builder: Support Sheet Builder creates printable, editable, copyable one-page support sheets.
+- /tools/declarative-language-translator: Declarative Language Translator translates direct language into more declarative, autonomy-preserving phrasing.
+- /tools/pda-iep-advice: PDA IEP Advice reviews school support content through a PDA-aware lens.
+- /tools/pda-behavior-report-help: PDA Behavior Report Help compares behavior incident reports against documented supports.
+
+Privacy and safety:
+- Support Sheet Builder does not use server-side child profile storage.
+- Upload-backed tools require human verification and server-side processing.
+- Do not infer or expose child, school, document, typed phrase, or generated-output content.
+- Donation prompts should appear after value is delivered.

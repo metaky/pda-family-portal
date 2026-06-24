@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import {
   buildDeclarativePrompt,
   buildMockDeclarativeTranslations,
@@ -10,22 +11,6 @@ import {
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 
-function getGeminiEndpoint(apiKey: string) {
-  return `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
-}
-
-function extractGeminiText(payload: unknown) {
-  if (typeof payload !== "object" || payload === null || !("candidates" in payload)) {
-    return null;
-  }
-
-  const candidates = (payload as { candidates?: unknown }).candidates;
-  if (!Array.isArray(candidates)) return null;
-  const first = candidates[0] as { content?: { parts?: Array<{ text?: unknown }> } } | undefined;
-  const text = first?.content?.parts?.find((part) => typeof part.text === "string")?.text;
-  return typeof text === "string" ? text : null;
-}
-
 function parseTranslationJson(text: string) {
   const cleaned = text
     .trim()
@@ -34,6 +19,31 @@ function parseTranslationJson(text: string) {
     .trim();
   const parsed = JSON.parse(cleaned);
   return normalizeTranslations(Array.isArray(parsed) ? parsed : []);
+}
+
+function getGeminiModel(apiKey: string) {
+  const client = new GoogleGenerativeAI(apiKey);
+
+  return client.getGenerativeModel({
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        items: {
+          properties: {
+            translation: { type: SchemaType.STRING },
+          },
+          required: ["translation"],
+          type: SchemaType.OBJECT,
+        },
+        type: SchemaType.ARRAY,
+      },
+    },
+    model: GEMINI_MODEL,
+    systemInstruction: {
+      parts: [{ text: translatorSystemInstruction }],
+      role: "system",
+    },
+  });
 }
 
 export async function POST(request: Request) {
@@ -64,42 +74,16 @@ export async function POST(request: Request) {
       ? buildVariationPrompt(validation.value)
       : buildDeclarativePrompt(validation.value);
 
-  const response = await fetch(getGeminiEndpoint(apiKey), {
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          items: {
-            properties: {
-              translation: { type: "STRING" },
-            },
-            required: ["translation"],
-            type: "OBJECT",
-          },
-          type: "ARRAY",
-        },
-        thinkingConfig: {
-          thinkingBudget: 0,
-        },
-      },
-      systemInstruction: {
-        parts: [{ text: translatorSystemInstruction }],
-      },
-    }),
-    headers: { "Content-Type": "application/json" },
-    method: "POST",
-  });
-
-  if (!response.ok) {
+  let responseText: string;
+  try {
+    const result = await getGeminiModel(apiKey).generateContent(prompt);
+    responseText = (await result.response).text();
+  } catch {
     return NextResponse.json(
       { error: "The translation service is unavailable right now." },
       { status: 502 },
     );
   }
-
-  const geminiPayload = await response.json().catch(() => null);
-  const responseText = extractGeminiText(geminiPayload);
 
   if (!responseText) {
     return NextResponse.json({ error: "Empty response from AI." }, { status: 502 });

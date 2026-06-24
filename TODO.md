@@ -456,13 +456,14 @@ Verification:
 Goal: Make the portal ready to be the canonical home without losing continuity from existing standalone tools.
 
 - [ ] Choose deployment target.
-- [ ] Add production environment documentation.
+- [x] Add production environment documentation.
 - [ ] Add canonical metadata for portal pages.
-- [ ] Add `llms.txt` or equivalent AI-readable project summary if useful.
-- [ ] Add sitemap/robots handling.
+- [x] Add `llms.txt` or equivalent AI-readable project summary if useful.
+- [x] Add sitemap/robots handling.
 - [ ] Add live donation destination.
 - [ ] Add privacy-safe analytics events for generation, print/export, email copy, short-text copy, donation click, and share click.
 - [ ] Confirm analytics never captures child, school, document, typed phrase, or generated-output content.
+- [x] Refactor the Declarative translator Gemini call to use the server-side SDK/header-based pattern so the API key is not placed in the outbound request URL.
 - [ ] Create bridge/redirect plan for old Declarative App URLs.
 - [ ] Create bridge/redirect plan for old PDA Your IEP URLs.
 - [ ] Create bridge/redirect plan for old behavior report URLs.
