@@ -485,9 +485,10 @@ Google Cloud deployment handoff:
 - [x] Add `GEMINI_API_KEY` and `SESSION_SIGNING_SECRET` to Secret Manager and grant the Cloud Run runtime service account secret access.
 - [ ] Add Cloudflare Turnstile production site/secret keys before enabling upload-backed AI routes publicly.
 - [ ] Create Cloud Build trigger after the GitHub repository and preferred production branch are confirmed.
-- [ ] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
-- [ ] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
-- [ ] Verify the deployed Cloud Run URL, then decide whether to add a custom domain.
+- [x] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
+- [x] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
+- [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-987113251595.us-west1.run.app`.
+- [ ] Decide whether to add a custom domain.
 
 Resume commands once billing approval is confirmed:
 
@@ -504,8 +505,8 @@ Verification:
 - [x] `npm test`
 - [x] `npm run build`
 - [x] `npm run test:e2e` once checked-in Playwright coverage exists.
-- [ ] Browser check production deployment.
-- [ ] Use `$playwright-cli` for production route smoke checks, console/network checks, and redirect validation.
+- [x] Browser check production deployment.
+- [x] Use browser automation for production route smoke checks, console/network checks, and live Gemini translator validation.
 - [ ] Use `$playwright-interactive` for final launch visual QA on desktop and mobile.
 - [x] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - [x] Check canonical URLs in page metadata.
