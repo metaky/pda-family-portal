@@ -1,0 +1,54 @@
+substitutions:
+  _REGION: us-west1
+  _SERVICE_NAME: pda-family-tools-portal
+  _ARTIFACT_REPOSITORY: pda-family-tools
+  _IMAGE_NAME: pda-family-tools-portal
+  _NEXT_PUBLIC_SITE_URL: https://replace-with-production-domain.example
+  _NEXT_PUBLIC_DONATION_URL: ""
+  _RUNTIME_SERVICE_ACCOUNT: pda-family-tools-run@$PROJECT_ID.iam.gserviceaccount.com
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--build-arg"
+      - "NEXT_PUBLIC_SITE_URL=$_NEXT_PUBLIC_SITE_URL"
+      - "--build-arg"
+      - "NEXT_PUBLIC_DONATION_URL=$_NEXT_PUBLIC_DONATION_URL"
+      - "-t"
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:$COMMIT_SHA"
+      - "-t"
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:latest"
+      - "."
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:$COMMIT_SHA"
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:latest"
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - "$_SERVICE_NAME"
+      - "--image=$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:$COMMIT_SHA"
+      - "--region=$_REGION"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--service-account=$_RUNTIME_SERVICE_ACCOUNT"
+      - "--memory=1Gi"
+      - "--cpu=1"
+      - "--concurrency=40"
+      - "--timeout=300"
+      - "--max-instances=10"
+      - "--set-env-vars=NEXT_PUBLIC_SITE_URL=$_NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_DONATION_URL=$_NEXT_PUBLIC_DONATION_URL,RAG_MOCK_MODE=false,SECURITY_ALLOW_TEST_TOKENS=false,SECURITY_USE_MEMORY_STORE=true,FEATURE_PDA_IEP_ANALYZE_ENABLED=true,FEATURE_BEHAVIOR_REPORT_ENABLED=true,MAINTENANCE_MODE=false"
+
+images:
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:$COMMIT_SHA"
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/$_ARTIFACT_REPOSITORY/$_IMAGE_NAME:latest"

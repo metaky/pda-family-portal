@@ -455,7 +455,7 @@ Verification:
 
 Goal: Make the portal ready to be the canonical home without losing continuity from existing standalone tools.
 
-- [ ] Choose deployment target.
+- [x] Choose deployment target.
 - [x] Add production environment documentation.
 - [x] Add canonical metadata for portal pages.
 - [x] Add `llms.txt` or equivalent AI-readable project summary if useful.
@@ -469,6 +469,8 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 - [x] Create bridge/redirect plan for old behavior report URLs.
 - [x] Add basic error monitoring plan.
 - [x] Add maintenance-mode or feature-unavailable pattern if migrated AI/API features are temporarily unavailable.
+- [ ] Configure Google Cloud project, Artifact Registry, Cloud Build trigger, Cloud Run service account, and Secret Manager secrets.
+- [ ] Deploy to Cloud Run with final `NEXT_PUBLIC_SITE_URL` and production secrets.
 
 Verification:
 
