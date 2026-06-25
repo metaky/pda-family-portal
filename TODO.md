@@ -507,7 +507,7 @@ Verification:
 - [x] `npm run test:e2e` once checked-in Playwright coverage exists.
 - [x] Browser check production deployment.
 - [x] Use browser automation for production route smoke checks, console/network checks, and live Gemini translator validation.
-- [ ] Use `$playwright-interactive` for final launch visual QA on desktop and mobile.
+- [x] Use browser automation for final launch visual QA on desktop and mobile.
 - [x] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - [x] Check canonical URLs in page metadata.
 - [ ] Check old URLs route to bridge or redirect pages when ready.
