@@ -165,21 +165,20 @@ export function PdaIepAnalyzer() {
         open={verificationOpen}
       />
       <section className="panel analyzer-panel">
-        <span className="status">Native migration in progress</span>
+        <span className="status">Prepare for school advocacy</span>
         <h1 className="page-title" style={{ marginTop: 16 }}>
-          PDA IEP Advice: Analyze
+          Review an IEP or 504 Plan
         </h1>
         <p className="lede">
-          Upload an IEP or 504 plan and get a PDA-aware review of goals,
-          accommodations, services, and behavior-plan language.
+          Upload a school support plan and get a PDA-aware review you can use
+          before an IEP meeting, email, or request for changes.
         </p>
 
         <div className="notice">
           <FileSearch size={22} aria-hidden="true" />
           <p style={{ margin: 0 }}>
-            The document is sent only when you choose to analyze it. Do not use
-            this as legal advice; use it as a practical preparation tool for
-            school conversations.
+            The document is sent only when you choose to analyze it. Use the
+            result as preparation for school conversations, not as legal advice.
           </p>
         </div>
 
@@ -242,15 +241,15 @@ export function PdaIepAnalyzer() {
           <div className="translator-empty">
             <FileSearch size={26} aria-hidden="true" />
             <p>
-              Your PDA-aware review will appear here after upload. It will
-              focus on practical school-language changes, not generic advice.
+              Your review will appear here after upload. It will focus on
+              language you can discuss with school staff, not generic PDA facts.
             </p>
           </div>
         ) : (
           <div className="analyzer-report printable-analysis">
             <div className="analyzer-report-header">
               <div>
-                <span className="status">PDA-aware score</span>
+                <span className="status">PDA-aware review</span>
                 <h2>{result.score} / 100</h2>
               </div>
               <button
@@ -282,7 +281,7 @@ export function PdaIepAnalyzer() {
                 </ul>
               </div>
               <div>
-                <h3>Opportunities</h3>
+                <h3>Places to strengthen</h3>
                 <ul>
                   {result.opportunities.map((opportunity) => (
                     <li key={opportunity}>
@@ -294,7 +293,7 @@ export function PdaIepAnalyzer() {
             </div>
 
             <div className="category-suggestions">
-              <h3>Language to Add or Rewrite</h3>
+              <h3>Language to Ask About</h3>
               {Object.entries(result.categorySuggestions).map(([category, suggestions]) => (
                 <div className="suggestion-row" key={category}>
                   <strong>{category}</strong>
@@ -302,7 +301,7 @@ export function PdaIepAnalyzer() {
                     Add: {suggestions.add.length > 0 ? suggestions.add.join("; ") : "No additions suggested."}
                   </p>
                   <p>
-                    Rewrite/remove:{" "}
+                    Rewrite or remove:{" "}
                     {suggestions.remove.length > 0
                       ? suggestions.remove.join("; ")
                       : "No removals suggested."}
@@ -312,7 +311,7 @@ export function PdaIepAnalyzer() {
             </div>
 
             <div className="finding-list">
-              <h3>Findings</h3>
+              <h3>What to Bring Into the Conversation</h3>
               {groupedFindings.map((group) => (
                 <div className="finding-group" key={group.category}>
                   <h4>{group.category}</h4>

@@ -54,32 +54,32 @@ const sectionNoteFields: Array<{
 }> = [
   {
     key: "helps",
-    label: "Extra detail for what helps",
+    label: "One specific thing that helps",
     placeholder: "Example: A drawing pad helps during waiting time.",
   },
   {
     key: "demands",
-    label: "Extra detail for pressure points",
+    label: "One pressure point this adult may miss",
     placeholder: "Example: Questions before transitions can pile up quickly.",
   },
   {
     key: "distressSigns",
-    label: "Extra detail for early signs",
+    label: "One early sign to notice",
     placeholder: "Example: Complaints about noise are often the first clue.",
   },
   {
     key: "avoid",
-    label: "Extra detail for what to avoid",
+    label: "One thing to avoid if possible",
     placeholder: "Example: Please do not remove the comfort item unless safety requires it.",
   },
   {
     key: "escalationPlan",
-    label: "Extra detail for escalation",
+    label: "One thing to do if stress rises",
     placeholder: "Example: If they leave, stay nearby but do not follow closely.",
   },
   {
     key: "recovery",
-    label: "Extra detail for recovery",
+    label: "One thing that helps afterward",
     placeholder: "Example: Reconnecting through a preferred topic works better than a debrief.",
   },
 ];
@@ -288,7 +288,7 @@ export function SupportSheetBuilder() {
   return (
     <div className="page-grid">
       <section className="panel no-print">
-        <span className="status">Ready in MVP</span>
+        <span className="status">One-page handoff</span>
         <h1 className="page-title" style={{ marginTop: 16 }}>
           Support Sheet Builder
         </h1>
@@ -337,7 +337,7 @@ export function SupportSheetBuilder() {
           <div className="field">
             <div className="group-label">Optional context starters</div>
             <p className="small-copy" style={{ margin: 0 }}>
-              Keep the child details you entered and tune the support language for a common moment.
+              Keep the child details you entered and shift the sheet toward a common moment.
             </p>
             <div className="preset-grid">
               {supportSheetContextPresets.map((preset) => (
@@ -434,9 +434,9 @@ export function SupportSheetBuilder() {
           />
 
           <div className="field">
-            <div className="group-label">Optional section details</div>
+            <div className="group-label">Optional details that make it feel like your child</div>
             <p className="small-copy" style={{ margin: 0 }}>
-              Add one specific note to any section that needs more context.
+              Add one concrete note where a generic handoff would not be enough.
             </p>
             <div className="section-note-grid">
               {sectionNoteFields.map((field) => (
@@ -453,7 +453,7 @@ export function SupportSheetBuilder() {
           </div>
 
           <label className="field">
-            <span>Parent / caregiver note</span>
+            <span>What should this adult do if support is not helping?</span>
             <textarea
               onChange={(event) => updateAnswer("contactNote", event.target.value)}
               value={answers.contactNote}
@@ -483,7 +483,7 @@ export function SupportSheetBuilder() {
             <ShieldCheck size={22} aria-hidden="true" />
             <p style={{ margin: 0 }}>
               {draft.privacyNote} Do not include anything you would not want in a
-              printed or copied note.
+              printed, copied, or forwarded note.
             </p>
           </div>
           <p className="small-copy">{draft.disclaimer}</p>
@@ -562,8 +562,8 @@ export function SupportSheetBuilder() {
           <div className="notice no-print" style={{ marginBottom: 16 }}>
             <Sprout size={22} aria-hidden="true" />
             <p style={{ margin: 0 }}>
-              This is a sample preview. Click generate after editing the form to
-              create the copyable and printable version.
+              This is a sample preview. After you adjust the details, generate a
+              version you can edit, copy, print, or send.
             </p>
           </div>
         ) : null}
@@ -645,7 +645,7 @@ export function SupportSheetBuilder() {
             <div>
               <strong>If this saved you an hour of emotional labor, you can help keep it free for the next parent.</strong>
               <p className="small-copy" style={{ margin: "6px 0 0" }}>
-                Donation prompt appears only after generation.
+                Donations are optional and never required to use the tool.
               </p>
             </div>
             <a

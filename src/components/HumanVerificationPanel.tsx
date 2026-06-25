@@ -67,10 +67,10 @@ export function HumanVerificationPanel({
         <div className="verification-icon" aria-hidden="true">
           <ShieldCheck size={28} />
         </div>
-        <h2>Complete security check</h2>
+        <h2>Quick security check</h2>
         <p>
-          We verify a human session only when you start an upload. This helps
-          protect the analyzer from automated abuse.
+          Before an upload starts, we check that this is a real person using the
+          tool. That helps protect the analyzers from automated abuse.
         </p>
 
         <button
@@ -79,7 +79,7 @@ export function HumanVerificationPanel({
           onClick={() => void submitVerification()}
           type="button"
         >
-          {isSubmitting ? "Verifying..." : "Complete security check"}
+          {isSubmitting ? "Checking..." : "Continue"}
         </button>
 
         {error && (

@@ -9,9 +9,9 @@ import { Footer, PortalShell } from "@/components/PortalShell";
 import { createPageMetadata } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "PDA IEP Advice: Accommodations",
+  title: "PDA-Aware Accommodation Ideas",
   description:
-    "Browse PDA-aware IEP accommodation ideas for language, flexibility, behavior support, scheduling, and school relationships.",
+    "Browse PDA-aware accommodation ideas parents can adapt for IEP meetings, school emails, and draft support plans.",
   path: "/tools/pda-iep-advice/accommodations",
 });
 
@@ -140,11 +140,11 @@ export default function PdaIepAccommodationsPage() {
     <PortalShell>
       <section className="content-hero panel">
         <span className="status">PDA IEP Advice</span>
-        <h1 className="page-title">PDA IEP Advice: Accommodations</h1>
+        <h1 className="page-title">PDA-Aware Accommodation Ideas</h1>
         <p className="lede">
-          Standard autism accommodations often emphasize structure, routine, and
-          clear instructions. PDA-aware accommodations must also protect
-          autonomy, flexibility, relationship safety, and anxiety reduction.
+          Use these examples when you need language for a meeting, email, or
+          draft plan. They are starting points, not a checklist every child
+          needs.
         </p>
         <div className="cta-row">
           <Link className="button button-primary" href="/tools/pda-iep-advice/analyze">

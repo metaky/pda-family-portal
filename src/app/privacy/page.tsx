@@ -18,8 +18,8 @@ export default function PrivacyPage() {
         <h1 className="page-title">Privacy and Safety</h1>
         <p className="lede">
           PDA Family Tools is built for sensitive family and school information.
-          The strongest rule is simple: child details, uploaded document text,
-          generated output, and form answers should never be analytics data.
+          The strongest rule is simple: the private details you enter to get
+          help should not become analytics data.
         </p>
       </section>
 
@@ -54,11 +54,12 @@ export default function PrivacyPage() {
         </section>
 
         <section className="content-section panel">
-          <h2>What the analyzer receives</h2>
+          <h2>When you upload a school document</h2>
           <p>
-            When you use PDA IEP Advice, the analyzer receives the PDF you choose
-            to upload and returns a PDA-aware analysis. The upload is not sent
-            until you choose to analyze it.
+            When you use PDA IEP Advice or PDA Behavior Report Help, the
+            analyzer receives the PDF or PDFs you choose to upload and returns
+            the requested review. Files are not sent until you choose to analyze
+            them.
           </p>
           <p>
             The analyzer may send extracted document text or PDF content to the
@@ -69,7 +70,7 @@ export default function PrivacyPage() {
         </section>
 
         <section className="content-section panel">
-          <h2>Analytics boundaries</h2>
+          <h2>What analytics should never include</h2>
           <p>
             Product analytics, if enabled later, should be limited to privacy-safe
             events such as a tool being opened, a report being generated, or a
@@ -80,11 +81,11 @@ export default function PrivacyPage() {
         </section>
 
         <section className="content-section panel">
-          <h2>Support Sheet Builder difference</h2>
+          <h2>Support Sheet Builder privacy</h2>
           <p>
-            The Support Sheet Builder is template-first and local to your browser
-            in this MVP. It does not require an account or server-side child
-            profile storage.
+            The Support Sheet Builder does not require an account. It uses the
+            information you type to create a sheet in your browser, and it does
+            not create a saved child profile on the server.
           </p>
           <Link className="button button-secondary" href="/terms">
             Read terms of use

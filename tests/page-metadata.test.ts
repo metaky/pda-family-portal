@@ -24,7 +24,7 @@ const staticPages = [
   {
     metadata: migrationMetadata,
     path: "/migration-inventory",
-    title: "Migration Inventory",
+    title: "How These Tools Are Built",
   },
   {
     metadata: declarativeMetadata,
@@ -45,17 +45,17 @@ const staticPages = [
   {
     metadata: pdaIepAnalyzeMetadata,
     path: "/tools/pda-iep-advice/analyze",
-    title: "PDA IEP Advice: Analyze",
+    title: "Review an IEP or 504 Plan",
   },
   {
     metadata: pdaIepAccommodationsMetadata,
     path: "/tools/pda-iep-advice/accommodations",
-    title: "PDA IEP Advice: Accommodations",
+    title: "PDA-Aware Accommodation Ideas",
   },
   {
     metadata: pdaIepGuideMetadata,
     path: "/tools/pda-iep-advice/guide",
-    title: "PDA IEP Advice: Guide",
+    title: "PDA IEP Support Guide",
   },
   {
     metadata: behaviorReportMetadata,
@@ -87,7 +87,7 @@ describe("page metadata", () => {
 
     expect(metadata.title).toBe("Teacher example");
     expect(metadata.description).toBe(
-      "A school handoff that keeps the focus on participation, transitions, and early support.",
+      "A school handoff for participation, transitions, and early support before stress builds.",
     );
     expect(metadata.alternates).toMatchObject({
       canonical: "/tools/support-sheet-builder/examples/teacher",

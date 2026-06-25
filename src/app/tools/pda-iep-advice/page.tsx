@@ -6,7 +6,7 @@ import { createPageMetadata } from "@/lib/site";
 export const metadata = createPageMetadata({
   title: "PDA IEP Advice",
   description:
-    "Review IEPs, 504 plans, accommodations, and school supports through a PDA-aware lens.",
+    "Prepare for school meetings and plan revisions with PDA-aware IEP and 504 support.",
   path: "/tools/pda-iep-advice",
 });
 
@@ -14,21 +14,21 @@ const sections = [
   {
     title: "Analyze an IEP or 504",
     description:
-      "Upload a PDF and get a PDA-aware review of goals, accommodations, behavior supports, services, and missing safeguards.",
+      "Upload a PDF and get a practical review of goals, accommodations, behavior supports, services, and missing safeguards.",
     href: "/tools/pda-iep-advice/analyze",
     icon: FileSearch,
   },
   {
     title: "Browse Accommodations",
     description:
-      "Review practical PDA-specific shifts for language, scheduling, flexibility, behavior supports, and school relationships.",
+      "Find PDA-aware accommodation ideas you can adapt for meetings, emails, or draft plan language.",
     href: "/tools/pda-iep-advice/accommodations",
     icon: ListChecks,
   },
   {
-    title: "Read the Guide",
+    title: "Understand the Shift",
     description:
-      "Learn the core IEP mindset shift from compliance to connection, co-regulation, autonomy, and nervous-system safety.",
+      "See why PDA support often needs to move from compliance pressure toward safety, autonomy, and co-regulation.",
     href: "/tools/pda-iep-advice/guide",
     icon: ShieldCheck,
   },
@@ -41,9 +41,9 @@ export default function PdaIepAdvicePage() {
         <span className="status">PDA IEP Advice</span>
         <h1 className="page-title">PDA IEP Advice</h1>
         <p className="lede">
-          A native portal suite for reviewing school documents through a
-          PDA-aware lens, preparing advocacy language, and understanding what
-          safety-centered support can look like in an IEP.
+          Tools for parents and caregivers who need to ask better school
+          questions, strengthen support language, and explain why a PDA-aware
+          plan has to protect autonomy and relationship safety.
         </p>
       </section>
 
@@ -58,7 +58,7 @@ export default function PdaIepAdvicePage() {
                   <strong>{section.title}</strong>
                   <p>{section.description}</p>
                   <Link className="button button-secondary" href={section.href}>
-                    Open
+                    Start here
                   </Link>
                 </article>
               );

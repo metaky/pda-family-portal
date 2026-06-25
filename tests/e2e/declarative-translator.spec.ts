@@ -41,7 +41,7 @@ test.describe("Declarative Language Translator", () => {
     await expect(page.getByRole("heading", { name: "Declarative Language Translator" })).toBeVisible();
     await expect(page.getByText("If this helped you find usable words")).toHaveCount(0);
 
-    await page.getByLabel("Caregiver phrase").fill("Please come down and wash your hands. It's dinner time.");
+    await page.getByLabel("What were you about to say?").fill("Please come down and wash your hands. It's dinner time.");
     await page.getByRole("button", { name: "Straightforward" }).click();
     await page.getByRole("button", { name: "Fewer words" }).click();
     await page.getByRole("button", { name: "Get ideas" }).click();
@@ -76,7 +76,7 @@ test.describe("Declarative Language Translator", () => {
     test.skip(testInfo.project.name !== "chromium", "desktop translator validation only");
 
     await page.goto("/tools/declarative-language-translator");
-    await page.getByLabel("Caregiver phrase").fill("Put your shoes on");
+    await page.getByLabel("What were you about to say?").fill("Put your shoes on");
     await page.getByRole("button", { name: "Interest Based" }).click();
 
     await expect(page.getByRole("button", { name: "Get ideas" })).toBeDisabled();
@@ -100,7 +100,7 @@ test.describe("Declarative Language Translator", () => {
     });
 
     await page.goto("/tools/declarative-language-translator");
-    await page.getByRole("button", { name: "School example" }).click();
+    await page.getByRole("button", { name: "School morning" }).click();
     await page.getByRole("button", { name: "Get ideas" }).click();
     await expect(page.getByText("The backpack is ready by the door.")).toBeVisible();
 

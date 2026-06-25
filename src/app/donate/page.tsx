@@ -19,12 +19,13 @@ export default function DonatePage() {
         <Heart color="var(--coral)" size={32} />
         <h1 className="page-title">Keep PDA Family Tools Free</h1>
         <p className="lede">
-          Donation support belongs after value is delivered. These tools stay
-          free to use, and donations help cover the real costs of running them.
+          These tools are free to use. Donations help cover the real costs of
+          keeping them available for the next exhausted parent who needs a
+          practical starting point.
         </p>
         <p>
-          If this saved you an hour of emotional labor, you can help keep the
-          same support available for the next parent.
+          If a tool saved you an hour of explaining, translating, or preparing,
+          you can support the same relief for someone else.
         </p>
         <DonationOptions tiers={donationTiers} />
       </section>

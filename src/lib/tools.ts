@@ -1,6 +1,6 @@
 import type { AudienceKey } from "./support-sheet";
 
-export type ToolStatus = "ready" | "migration-planned";
+export type ToolStatus = "quick" | "school";
 
 export type PortalTool = {
   title: string;
@@ -14,39 +14,39 @@ export const tools: PortalTool[] = [
   {
     title: "Declarative Language Translator",
     href: "/tools/declarative-language-translator",
-    description: "Turn direct, demand-heavy language into more declarative, autonomy-preserving phrasing.",
-    status: "ready",
-    job: "Type a phrase. Get gentler PDA-aware wording.",
+    description: "When you know a request may land badly, get a few lower-pressure ways to say the same thing.",
+    status: "quick",
+    job: "Type the sentence you were about to say. Pick wording that is easier to hear.",
   },
   {
     title: "Support Sheet Builder",
     href: "/tools/support-sheet-builder",
-    description: "Create a one-page guide for adults who need to understand and support your PDA child.",
-    status: "ready",
-    job: "Answer a few prompts. Get printable, copyable handoffs.",
+    description: "Make a calm one-page guide for the next teacher, relative, sitter, coach, or provider.",
+    status: "quick",
+    job: "Answer a few prompts once. Get something you can print, copy, or send.",
   },
   {
     title: "PDA IEP Advice",
     href: "/tools/pda-iep-advice",
-    description: "Review IEPs, 504 plans, accommodations, and school supports through a PDA-aware lens.",
-    status: "migration-planned",
-    job: "Put in effort once. Strengthen school advocacy.",
+    description: "Look at school plans through a PDA-aware lens before a meeting, email, or revision request.",
+    status: "school",
+    job: "Upload a plan or browse examples. Leave with clearer advocacy language.",
   },
   {
     title: "PDA Behavior Report Help",
     href: "/tools/pda-behavior-report-help",
-    description: "Review behavior incident reports against documented supports and identify practical next steps.",
-    status: "migration-planned",
-    job: "Understand what happened and what support may have been missed.",
+    description: "Compare an incident report with the supports your child was supposed to receive.",
+    status: "school",
+    job: "Spot missed supports and prepare calmer, more specific follow-up questions.",
   },
 ];
 
 export const audienceQuickStarts: Record<AudienceKey, string> = {
-  teacher: "School staff need a credible one-page guide they can use during busy routines.",
-  substitute: "Substitutes need the shortest path to keeping the day calm.",
-  relative: "Family members often need language that explains support without sounding like a debate about discipline.",
-  childcare: "Caregivers need safety, contact, and what to do when things start going sideways.",
-  activity: "Activity leaders need flexible participation guidance without public pressure.",
-  medical: "Providers need consent, previewing, and a lower-demand appointment plan.",
-  custom: "Use this when the adult or setting does not fit the common templates.",
+  teacher: "Useful for a new teacher, classroom change, meeting follow-up, or staff handoff.",
+  substitute: "Keep this short enough for someone stepping in during a busy school day.",
+  relative: "Explain what helps without turning family support into a discipline debate.",
+  childcare: "Focus on safety, contact details, and what to try before things escalate.",
+  activity: "Help coaches and leaders support participation without public pressure.",
+  medical: "Give providers a consent, previewing, and pause plan before the appointment starts.",
+  custom: "Use this for any adult or setting that does not fit the common templates.",
 };

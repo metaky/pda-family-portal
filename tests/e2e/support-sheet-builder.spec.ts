@@ -21,7 +21,7 @@ test.describe("Support Sheet Builder", () => {
     await expect(page.getByLabel("Child name or nickname")).toHaveValue("Morgan");
     await page.getByLabel("Child name or nickname").fill("Taylor");
     await page
-      .getByLabel("Extra detail for escalation")
+      .getByLabel("One thing to do if stress rises")
       .fill("If Taylor backs away, pause and explain the next step before trying again.");
 
     await page.getByRole("button", { name: /Generate support sheet/i }).click();
@@ -199,7 +199,9 @@ test.describe("Support Sheet Builder", () => {
 
     await page.goto("/tools/support-sheet-builder/examples");
     await expect(page.getByRole("heading", { name: "Support Sheet Examples" })).toBeVisible();
-    await expect(page.getByText("Preview fictional examples before entering child details.")).toBeVisible();
+    await expect(
+      page.getByText("See what the builder can create before you enter your own family details."),
+    ).toBeVisible();
 
     for (const example of examples) {
       await expect(page.getByRole("link", { name: new RegExp(example.title, "i") })).toBeVisible();

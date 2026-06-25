@@ -47,7 +47,7 @@ describe("support sheet generator", () => {
       "Please Avoid",
       "If Things Escalate",
       "Recovery and Afterward",
-      "Parent / Caregiver Note",
+      "If Support Is Not Helping",
     ]);
     expect(outputs.sheet.sections[1].items.join(" ")).toContain("choices");
   });

@@ -100,7 +100,7 @@ export function DualUploadZone({
   return (
     <div className="analyzer-two-column">
       <UploadBox
-        description="Choose the school incident report PDF."
+        description="Choose the school incident report you want to understand."
         file={behaviorReport}
         inputLabel="Upload behavior incident report PDF"
         isProcessing={isProcessing}
@@ -109,7 +109,7 @@ export function DualUploadZone({
         title="Behavior incident report"
       />
       <UploadBox
-        description="Choose the IEP or 504 plan to compare against."
+        description="Choose the plan that describes the supports school should use."
         file={iepDocument}
         inputLabel="Upload IEP or 504 PDF for comparison"
         isProcessing={isProcessing}

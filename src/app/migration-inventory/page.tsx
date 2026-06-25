@@ -3,9 +3,9 @@ import { MigrationInventory } from "@/components/MigrationInventory";
 import { createPageMetadata } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "Migration Inventory",
+  title: "How These Tools Are Built",
   description:
-    "Track how Declarative App and PDA Your IEP source features are being migrated into native PDA Family Tools portal routes.",
+    "See how PDA Family Tools keeps its parent-facing tools grounded in proven source projects, privacy choices, and practical use cases.",
   path: "/migration-inventory",
 });
 
@@ -13,11 +13,12 @@ export default function MigrationInventoryPage() {
   return (
     <PortalShell>
       <section className="panel" style={{ marginBottom: 20 }}>
-        <h1 className="page-title">Migration Inventory</h1>
+        <h1 className="page-title">How These Tools Are Built</h1>
         <p className="lede">
-          The portal treats Declarative App and PDA Your IEP as source projects
-          to migrate into native features. This inventory keeps the later porting
-          work grounded in real modules, prompts, privacy copy, and tests.
+          PDA Family Tools pulls together work that started in separate tools.
+          This page is mostly here for transparency: it shows which experiences
+          were brought into the portal and what promises need to stay intact for
+          families.
         </p>
       </section>
       <MigrationInventory />

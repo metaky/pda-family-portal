@@ -182,13 +182,14 @@ export function BehaviorReportAnalyzer({
       />
 
       <section className="panel analyzer-panel">
-        <span className="status">Native migration in progress</span>
+        <span className="status">Prepare a school follow-up</span>
         <h1 className="page-title" style={{ marginTop: 16 }}>
           PDA Behavior Report Help
         </h1>
         <p className="lede">
-          Compare a behavior incident report with an IEP or 504 plan to spot
-          missed supports, PDA-aware context, and practical next steps.
+          Compare a school incident report with your child&apos;s IEP or 504 plan
+          so you can ask clearer questions about what happened and what support
+          may have been missed.
         </p>
 
         <div className="notice">
@@ -269,16 +270,16 @@ export function BehaviorReportAnalyzer({
           <div className="translator-empty">
             <FileSearch size={26} aria-hidden="true" />
             <p>
-              Behavior Incident Analysis will appear here after both PDFs are
-              uploaded and reviewed.
+              Your incident review will appear here after both PDFs are uploaded
+              and analyzed.
             </p>
           </div>
         ) : (
           <div className="analyzer-report printable-analysis">
             <div className="analyzer-report-header">
               <div>
-                <span className="status">Behavior Incident Analysis</span>
-                <h2>Behavior Incident Analysis</h2>
+                <span className="status">Incident review</span>
+                <h2>Questions and next steps</h2>
               </div>
               <button
                 className="button button-secondary no-print"
@@ -299,17 +300,17 @@ export function BehaviorReportAnalyzer({
 
             <div className="analyzer-two-column">
               <div>
-                <h3>What went well</h3>
+                <h3>Supports the school may have used well</h3>
                 {listItems(result.whatWentWell, CheckCircle2)}
               </div>
               <div>
-                <h3>What could be better</h3>
+                <h3>Supports to ask about</h3>
                 {listItems(result.whatCouldBeBetter, AlertTriangle)}
               </div>
             </div>
 
             <div className="finding-list">
-              <h3>IEP guidance that should shape the response</h3>
+              <h3>Plan language that should shape the response</h3>
               {result.iepGuidance.map((item) => (
                 <article
                   className="finding-card finding-behavior-plan"

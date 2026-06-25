@@ -30,12 +30,12 @@ test.describe("PDA Behavior Report Help", () => {
       .setInputFiles(iepFixturePdf);
     await page.getByRole("button", { name: "Analyze behavior report" }).click();
 
-    await expect(page.getByRole("heading", { name: "Complete security check" })).toBeVisible();
-    await page.getByRole("button", { name: "Complete security check" }).click();
+    await expect(page.getByRole("heading", { name: "Quick security check" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue" }).click();
 
-    await expect(page.getByText("Behavior Incident Analysis")).toBeVisible();
-    await expect(page.getByText("What went well")).toBeVisible();
-    await expect(page.getByText("What could be better")).toBeVisible();
+    await expect(page.getByText("Questions and next steps")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText("Supports the school may have used well")).toBeVisible();
+    await expect(page.getByText("Supports to ask about")).toBeVisible();
     await expect(page.getByText("PDA considerations")).toBeVisible();
     await expect(page.getByRole("button", { name: "Print or save" })).toBeVisible();
   });
