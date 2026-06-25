@@ -527,12 +527,12 @@ Goal: Improve output quality without turning the product into a tracker, dashboa
 
 Verification:
 
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] `npm run test:e2e` when personalization affects browser behavior.
+- [x] `npm test`
+- [x] `npm run build`
+- [x] `npm run test:e2e` when personalization affects browser behavior.
 - [ ] Browser check local-only behavior.
 - [ ] Use `$playwright-interactive` for local-storage/privacy-state QA when local-only saving is added.
-- [ ] Confirm no server-side Support Sheet Builder storage was introduced.
+- [x] Confirm no server-side Support Sheet Builder storage was introduced.
 - [ ] Confirm new personalization options do not make the first useful output slower or more demanding.
 
 ## Current Best Next Build
