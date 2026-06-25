@@ -27,6 +27,7 @@ import {
   recoveryOptions,
   supportSheetContextPresets,
   supportSheetPresets,
+  supportSheetToneOptions,
   type AudienceKey,
   type EditableSupportSheetDraft,
   type OptionItem,
@@ -349,6 +350,27 @@ export function SupportSheetBuilder() {
                 >
                   <strong>Use {preset.label} context</strong>
                   <span>{preset.description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="group-label">Optional tone</div>
+            <p className="small-copy" style={{ margin: 0 }}>
+              Shift the email and short text wording without changing the support sheet itself.
+            </p>
+            <div className="chip-grid">
+              {supportSheetToneOptions.map((option) => (
+                <button
+                  className={`chip ${answers.tone === option.id ? "selected" : ""}`}
+                  key={option.id}
+                  onClick={() => updateAnswer("tone", option.id)}
+                  title={option.description}
+                  type="button"
+                >
+                  {answers.tone === option.id ? <Check size={14} aria-hidden="true" /> : null}
+                  {option.label}
                 </button>
               ))}
             </div>

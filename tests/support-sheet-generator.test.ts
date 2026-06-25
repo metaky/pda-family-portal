@@ -8,6 +8,7 @@ import {
   generateSupportSheetOutputs,
   supportSheetContextPresets,
   supportSheetPresets,
+  supportSheetToneOptions,
   type SupportSheetAnswers,
 } from "../src/lib/support-sheet";
 
@@ -140,6 +141,34 @@ describe("support sheet generator", () => {
       expect(outputs.shortText).toContain(testCase.shortPhrase);
       expect(outputs.email).not.toContain(testCase.absentPhrase);
     }
+  });
+
+  it("applies tone controls without changing the support sheet sections", () => {
+    expect(supportSheetToneOptions.map((option) => option.id)).toEqual([
+      "warm",
+      "direct",
+      "brief",
+    ]);
+
+    const warm = generateSupportSheetOutputs({
+      ...baseAnswers,
+      tone: "warm",
+    });
+    const direct = generateSupportSheetOutputs({
+      ...baseAnswers,
+      tone: "direct",
+    });
+    const brief = generateSupportSheetOutputs({
+      ...baseAnswers,
+      tone: "brief",
+    });
+
+    expect(direct.email).toContain("Practical handoff for Sam");
+    expect(brief.email).toContain("Quick handoff for Sam");
+    expect(brief.shortText).toContain("Brief note for the school day with Sam");
+    expect(brief.email.length).toBeLessThan(warm.email.length);
+    expect(brief.shortText.length).toBeLessThan(warm.shortText.length);
+    expect(brief.sheet.sections).toEqual(warm.sheet.sections);
   });
 
   it("adds section-specific parent notes to the matching generated sections", () => {
