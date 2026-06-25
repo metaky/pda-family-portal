@@ -518,7 +518,7 @@ Verification:
 
 Goal: Improve output quality without turning the product into a tracker, dashboard, or maintenance loop.
 
-- [ ] Evaluate whether local-only browser saving is worth adding.
+- [x] Evaluate whether local-only browser saving is worth adding: defer until user demand is clearer.
 - [ ] If local saving is added, clearly label it as stored on the user's device.
 - [ ] Add optional "help me word this better" assistance only after template-first behavior is solid.
 - [x] Add stronger audience-specific template variations.
