@@ -488,7 +488,7 @@ Google Cloud deployment handoff:
 - [x] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
 - [x] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
 - [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-pdlcgpcnga-uw.a.run.app`.
-- [ ] Decide whether to add a custom domain.
+- [x] Decide whether to add a custom domain: defer until later.
 
 Resume commands once billing approval is confirmed:
 
@@ -521,7 +521,7 @@ Goal: Improve output quality without turning the product into a tracker, dashboa
 - [ ] Evaluate whether local-only browser saving is worth adding.
 - [ ] If local saving is added, clearly label it as stored on the user's device.
 - [ ] Add optional "help me word this better" assistance only after template-first behavior is solid.
-- [ ] Add stronger audience-specific template variations.
+- [x] Add stronger audience-specific template variations.
 - [x] Add optional school-year, appointment, or activity-context presets.
 - [ ] Add user-editable tone controls if they improve output without adding complexity.
 

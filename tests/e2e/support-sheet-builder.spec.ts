@@ -56,7 +56,7 @@ test.describe("Support Sheet Builder", () => {
 
     await page.getByRole("tab", { name: "Email" }).click();
     await expect(page.locator(".copy-box")).toHaveValue(
-      /I wanted to share a short support guide for Taylor/,
+      /I wanted to share a short appointment support note for Taylor/,
     );
     await expect(page.locator(".copy-box")).toHaveValue(
       /Created with the free PDA Support Sheet Builder: http:\/\/127\.0\.0\.1:3000\/tools\/support-sheet-builder/,
@@ -71,12 +71,12 @@ test.describe("Support Sheet Builder", () => {
     await page.getByRole("button", { name: /^Copy$/ }).click();
     await expect(page.getByRole("status")).toContainText("Copied email");
     await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain(
-      "I wanted to share a short support guide for Taylor",
+      "I wanted to share a short appointment support note for Taylor",
     );
 
     await page.getByRole("tab", { name: "Short text" }).click();
     const shortText = await page.locator(".copy-box").inputValue();
-    expect(shortText).toContain("Quick note for supporting Taylor");
+    expect(shortText).toContain("Quick note for the appointment with Taylor");
     expect(shortText.length).toBeLessThan(650);
 
     expect(unexpectedApiCalls).toEqual([]);

@@ -55,9 +55,9 @@ describe("support sheet generator", () => {
   it("generates copyable email and short text outputs without requiring server storage", () => {
     const outputs = generateSupportSheetOutputs(baseAnswers);
 
-    expect(outputs.email).toContain("I wanted to share a short support guide for Sam");
+    expect(outputs.email).toContain("I wanted to share a short school support guide for Sam");
     expect(outputs.email).toContain("Created with the free PDA Support Sheet Builder");
-    expect(outputs.shortText).toContain("Quick note for supporting Sam");
+    expect(outputs.shortText).toContain("Quick note for the school day with Sam");
     expect(outputs.shortText.length).toBeLessThan(650);
     expect(outputs.privacyNote).toContain("does not require an account");
   });
@@ -89,6 +89,57 @@ describe("support sheet generator", () => {
     expect(medical.sheet.sections[1].items.join(" ")).toContain("consent");
     expect(relative.sheet.sections[2].items.join(" ")).toContain("collaborative");
     expect(relative.sheet.sections[2].items.join(" ")).not.toContain("procedures");
+  });
+
+  it("uses audience-specific framing in email and short text outputs", () => {
+    const cases: Array<{
+      audience: SupportSheetAnswers["audience"];
+      emailPhrase: string;
+      shortPhrase: string;
+      absentPhrase: string;
+    }> = [
+      {
+        audience: "teacher",
+        emailPhrase: "school support guide",
+        shortPhrase: "school day",
+        absentPhrase: "appointment support note",
+      },
+      {
+        audience: "relative",
+        emailPhrase: "family support guide",
+        shortPhrase: "family time",
+        absentPhrase: "school support guide",
+      },
+      {
+        audience: "childcare",
+        emailPhrase: "care handoff",
+        shortPhrase: "caregiving",
+        absentPhrase: "appointment support note",
+      },
+      {
+        audience: "medical",
+        emailPhrase: "appointment support note",
+        shortPhrase: "appointment",
+        absentPhrase: "school support guide",
+      },
+      {
+        audience: "activity",
+        emailPhrase: "participation guide",
+        shortPhrase: "activity",
+        absentPhrase: "appointment support note",
+      },
+    ];
+
+    for (const testCase of cases) {
+      const outputs = generateSupportSheetOutputs({
+        ...baseAnswers,
+        audience: testCase.audience,
+      });
+
+      expect(outputs.email).toContain(testCase.emailPhrase);
+      expect(outputs.shortText).toContain(testCase.shortPhrase);
+      expect(outputs.email).not.toContain(testCase.absentPhrase);
+    }
   });
 
   it("adds section-specific parent notes to the matching generated sections", () => {

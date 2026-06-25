@@ -163,6 +163,66 @@ export const audienceOptions: AudienceOption[] = [
   },
 ];
 
+const audienceCopy: Record<
+  AudienceKey,
+  {
+    emailGuide: string;
+    emailContext: string;
+    shortContext: string;
+    thanks: string;
+  }
+> = {
+  teacher: {
+    emailGuide: "school support guide",
+    emailContext:
+      "The goal is to make classroom routines, transitions, and participation easier to support before stress builds.",
+    shortContext: "the school day",
+    thanks: "Thank you for supporting this school day with flexibility and care.",
+  },
+  substitute: {
+    emailGuide: "substitute handoff",
+    emailContext:
+      "The goal is to give a new adult quick, practical context for the day without making the child explain themselves.",
+    shortContext: "the substitute day",
+    thanks: "Thank you for helping the day stay flexible and low-pressure.",
+  },
+  relative: {
+    emailGuide: "family support guide",
+    emailContext:
+      "The goal is to make family time feel safer and more connected without turning hard moments into debates about discipline.",
+    shortContext: "family time",
+    thanks: "Thank you for protecting connection and flexibility during family time.",
+  },
+  childcare: {
+    emailGuide: "care handoff",
+    emailContext:
+      "The goal is to make caregiving feel predictable, safe, and low-pressure if routines or emotions get hard.",
+    shortContext: "caregiving",
+    thanks: "Thank you for keeping care calm, flexible, and connected.",
+  },
+  activity: {
+    emailGuide: "participation guide",
+    emailContext:
+      "The goal is to support group activity participation without public pressure, shame, or an all-or-nothing expectation.",
+    shortContext: "the activity",
+    thanks: "Thank you for making participation flexible and dignified.",
+  },
+  medical: {
+    emailGuide: "appointment support note",
+    emailContext:
+      "The goal is to support consent, previewing, and pauses so the appointment can stay as low-distress as possible.",
+    shortContext: "the appointment",
+    thanks: "Thank you for supporting the appointment with consent, clarity, and patience.",
+  },
+  custom: {
+    emailGuide: "support guide",
+    emailContext:
+      "The goal is to give practical context for supporting this child with less guesswork and pressure.",
+    shortContext: "this situation",
+    thanks: "Thank you for supporting them with flexibility and care.",
+  },
+};
+
 export const helpOptions: OptionItem[] = [
   { id: "extra_processing_time", label: "Extra processing time", phrase: "extra processing time before answering or shifting tasks" },
   {
@@ -325,6 +385,7 @@ export function generateSupportSheetOutputs(
   answers: SupportSheetAnswers,
 ): SupportSheetOutputs {
   const audience = getAudience(answers.audience);
+  const copy = audienceCopy[answers.audience] ?? audienceCopy.custom;
   const name = firstName(answers.child.name);
   const connection = answers.child.connectionPoints.trim();
   const customNotes = answers.customNotes.trim();
@@ -388,7 +449,7 @@ export function generateSupportSheetOutputs(
   const email = [
     `Hi,`,
     ``,
-    `I wanted to share a short support guide for ${name}. PDA can mean that everyday demands sometimes register as a threat, especially when ${name} feels rushed, watched, corrected, or out of control. The ideas below are the approaches that tend to help ${name} stay connected and able to participate.`,
+    `I wanted to share a short ${copy.emailGuide} for ${name}. PDA can mean that everyday demands sometimes register as a threat, especially when ${name} feels rushed, watched, corrected, or out of control. ${copy.emailContext}`,
     ``,
     `${name} connects through: ${connection || "connection, trust, and low-pressure support."}`,
     ``,
@@ -401,12 +462,12 @@ export function generateSupportSheetOutputs(
     ``,
     contactNote || `If things are getting hard, please contact me so we can help ${name} recover without shame.`,
     ``,
-    `Thank you for supporting ${name} with flexibility and care.`,
+    copy.thanks,
     ``,
     `Created with the free PDA Support Sheet Builder.`,
   ].join("\n");
 
-  const shortText = `Quick note for supporting ${name}: direct pressure can feel much bigger than it looks, so ${listSentence(
+  const shortText = `Quick note for ${copy.shortContext} with ${name}: direct pressure can feel much bigger than it looks, so ${listSentence(
     helps.slice(0, 3),
   ) || "choices, extra time, and indirect language"} usually work better. If ${name} gets stuck, please ${
     listSentence(escalationPlan.slice(0, 3)) || "reduce language, give space, and pause the demand"

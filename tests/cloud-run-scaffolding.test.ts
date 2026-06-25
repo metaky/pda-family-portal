@@ -38,8 +38,14 @@ describe("Cloud Run deployment scaffolding", () => {
     expect(cloudBuild).toContain("--region=$_REGION");
     expect(cloudBuild).toContain("--service-account=$_RUNTIME_SERVICE_ACCOUNT");
     expect(cloudBuild).toContain("NEXT_PUBLIC_SITE_URL=$_NEXT_PUBLIC_SITE_URL");
-    expect(cloudBuild).not.toContain("GEMINI_API_KEY=");
-    expect(cloudBuild).not.toContain("TURNSTILE_SECRET_KEY=");
-    expect(cloudBuild).not.toContain("SESSION_SIGNING_SECRET=");
+    const envVarsLine = cloudBuild
+      .split("\n")
+      .find((line) => line.includes("--set-env-vars="));
+
+    expect(envVarsLine).not.toContain("GEMINI_API_KEY=");
+    expect(envVarsLine).not.toContain("TURNSTILE_SECRET_KEY=");
+    expect(envVarsLine).not.toContain("SESSION_SIGNING_SECRET=");
+    expect(cloudBuild).toContain("--set-secrets=GEMINI_API_KEY=$_GEMINI_API_KEY_SECRET:latest");
+    expect(cloudBuild).toContain("SESSION_SIGNING_SECRET=$_SESSION_SIGNING_SECRET_SECRET:latest");
   });
 });
