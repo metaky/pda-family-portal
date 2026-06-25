@@ -35,7 +35,7 @@ const exampleDefinitions: ExampleDefinition[] = [
     slug: "teacher",
     title: "Teacher example",
     shortTitle: "Teacher",
-    summary: "A school handoff that keeps the focus on participation, transitions, and early support.",
+    summary: "A school handoff for participation, transitions, and early support before stress builds.",
     valueStatement:
       "See how a parent can give school staff a credible one-page guide without writing a long defensive email or expecting a teacher to read a full PDA article.",
     bestFor: ["new classroom teams", "start-of-year handoffs", "meeting follow-up"],
@@ -45,7 +45,7 @@ const exampleDefinitions: ExampleDefinition[] = [
     slug: "family",
     title: "Grandparent or relative example",
     shortTitle: "Family",
-    summary: "A family-facing note that explains support without turning it into a discipline debate.",
+    summary: "A family-facing note that explains support without starting a discipline debate.",
     valueStatement:
       "See how the sheet can explain why low-pressure support is practical care, not permissive parenting, while still keeping the language calm enough to send.",
     bestFor: ["grandparents", "aunts and uncles", "holiday visits"],
@@ -55,7 +55,7 @@ const exampleDefinitions: ExampleDefinition[] = [
     slug: "childcare",
     title: "Babysitter or childcare example",
     shortTitle: "Childcare",
-    summary: "A practical care note focused on safety, escalation signs, and when to contact the parent.",
+    summary: "A practical care note for safety, early stress signs, and when to contact the parent.",
     valueStatement:
       "See how a short handoff can help a caregiver understand what to avoid, what to try first, and when to call, without needing private family history.",
     bestFor: ["babysitters", "childcare handoffs", "short-term caregivers"],

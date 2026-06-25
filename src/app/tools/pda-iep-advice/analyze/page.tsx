@@ -3,9 +3,9 @@ import { PdaIepAnalyzer } from "@/components/PdaIepAnalyzer";
 import { createPageMetadata } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "PDA IEP Advice: Analyze",
+  title: "Review an IEP or 504 Plan",
   description:
-    "Upload an IEP or 504 PDF for a PDA-aware review of goals, accommodations, services, and behavior-plan language.",
+    "Upload an IEP or 504 PDF and get PDA-aware questions and language to prepare for a school conversation.",
   path: "/tools/pda-iep-advice/analyze",
 });
 

@@ -7,7 +7,7 @@ import { supportSheetExamples } from "@/lib/support-sheet-examples";
 export const metadata = createPageMetadata({
   title: "Support Sheet Examples",
   description:
-    "Preview fictional PDA support sheet examples before entering your own family details.",
+    "Preview fictional PDA support sheet examples for teachers, family members, caregivers, providers, and activity leaders.",
   path: "/tools/support-sheet-builder/examples",
 });
 
@@ -20,14 +20,14 @@ export default function SupportSheetExamplesPage() {
           Support Sheet Examples
         </h1>
         <p className="lede">
-          Preview fictional examples before entering child details.
+          See what the builder can create before you enter your own family details.
         </p>
         <div className="notice">
           <ShieldCheck size={22} aria-hidden="true" />
           <p style={{ margin: 0 }}>
             These samples use fictional children and common situations. They show
-            the kind of handoff the builder creates without asking for your
-            family&apos;s information first.
+            the kind of handoff you can make without sharing your own child&apos;s
+            details first.
           </p>
         </div>
         <div className="cta-row">

@@ -4,9 +4,9 @@ import { Footer, PortalShell } from "@/components/PortalShell";
 import { createPageMetadata } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "PDA IEP Advice: Guide",
+  title: "PDA IEP Support Guide",
   description:
-    "Learn how PDA-aware IEP support shifts from compliance to connection, co-regulation, autonomy, and nervous-system safety.",
+    "Understand the PDA-aware shift parents can ask school teams to make in IEP and 504 supports.",
   path: "/tools/pda-iep-advice/guide",
 });
 
@@ -15,11 +15,11 @@ export default function PdaIepGuidePage() {
     <PortalShell>
       <section className="content-hero panel">
         <span className="status">PDA IEP Advice</span>
-        <h1 className="page-title">PDA IEP Advice: Guide</h1>
+        <h1 className="page-title">PDA IEP Support Guide</h1>
         <p className="lede">
-          A PDA-affirming IEP starts with a foundational shift: behavior is not
-          treated as defiance to overcome, but as nervous-system communication
-          that needs safety, autonomy, and co-regulation.
+          If school support keeps becoming a fight over compliance, start here.
+          A PDA-aware plan names what adults will do to reduce threat, preserve
+          dignity, and help the student recover.
         </p>
         <div className="cta-row">
           <Link className="button button-primary" href="/tools/pda-iep-advice/analyze">
@@ -37,7 +37,7 @@ export default function PdaIepGuidePage() {
             <span className="content-icon" aria-hidden="true">
               <Sparkles size={24} />
             </span>
-            <h2>A Foundational Shift</h2>
+            <h2>The Shift to Ask For</h2>
           </div>
           <div className="comparison-grid large">
             <div>
@@ -47,7 +47,7 @@ export default function PdaIepGuidePage() {
               <ul>
                 <li>Behavior is framed as choice or defiance.</li>
                 <li>Rewards and consequences are used to motivate.</li>
-                <li>The goal is compliance and obedience.</li>
+                <li>The goal is compliance, obedience, or proving the student can do it.</li>
               </ul>
             </div>
             <div>
@@ -72,8 +72,9 @@ export default function PdaIepGuidePage() {
           </div>
           <p>
             The most important IEP shift is moving away from compliance-first
-            language. A PDA-aware plan names what adults will do to lower threat,
-            reduce demands, preserve dignity, and help the student recover.
+            language. A useful plan names what adults will do differently when
+            stress rises, instead of putting all the burden on the student to
+            cope better.
           </p>
           <div className="principle-grid">
             <article>
@@ -101,7 +102,7 @@ export default function PdaIepGuidePage() {
         </section>
 
         <section className="content-section panel">
-          <h2>The Three Pillars of Safety</h2>
+          <h2>Common Plan Language to Reconsider</h2>
           <div className="table-card">
             <div className="table-row table-head">
               <strong>Traditional or unhelpful</strong>
@@ -130,8 +131,8 @@ export default function PdaIepGuidePage() {
           <h2>Meaningful Goals</h2>
           <p>
             Goals should support long-term well-being, self-advocacy, flexible
-            participation, and regulation. They should not simply measure how
-            often a student complies.
+            participation, and regulation. If a goal mostly measures compliance,
+            it may create more pressure than support.
           </p>
           <div className="goal-example">
             <div>

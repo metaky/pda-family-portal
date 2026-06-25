@@ -16,8 +16,8 @@ test.describe("PDA IEP Advice migrated content pages", () => {
     await expect(page.getByRole("heading", { name: "PDA IEP Advice" })).toBeVisible();
     await expect(page.getByText("Analyze an IEP or 504")).toBeVisible();
     await expect(page.getByText("Browse Accommodations")).toBeVisible();
-    await expect(page.getByText("Read the Guide")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Open" }).nth(0)).toHaveAttribute(
+    await expect(page.getByText("Understand the Shift")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Start here" }).nth(0)).toHaveAttribute(
       "href",
       "/tools/pda-iep-advice/analyze",
     );
@@ -32,7 +32,7 @@ test.describe("PDA IEP Advice migrated content pages", () => {
     await page.goto("/tools/pda-iep-advice/accommodations");
 
     await expect(
-      page.getByRole("heading", { name: "PDA IEP Advice: Accommodations" }),
+      page.getByRole("heading", { name: "PDA-Aware Accommodation Ideas" }),
     ).toBeVisible();
     await expect(page.getByText("Use of Declarative Language")).toBeVisible();
     await expect(page.getByText("Visual Menus Instead of Rigid Schedules")).toBeVisible();
@@ -53,13 +53,13 @@ test.describe("PDA IEP Advice migrated content pages", () => {
     await page.goto("/tools/pda-iep-advice/guide");
 
     await expect(
-      page.getByRole("heading", { name: "PDA IEP Advice: Guide" }),
+      page.getByRole("heading", { name: "PDA IEP Support Guide" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "A Foundational Shift" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "The Shift to Ask For" })).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Compliance to Connection and Co-regulation" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "The Three Pillars of Safety" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Common Plan Language to Reconsider" })).toBeVisible();
     await expect(page.getByText("PDA-affirming goal")).toBeVisible();
     await expect(page.getByRole("link", { name: "Analyze your IEP" })).toHaveAttribute(
       "href",

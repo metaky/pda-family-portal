@@ -329,7 +329,7 @@ export const recoveryOptions: OptionItem[] = [
 ];
 
 const privacyNote =
-  "This tool does not require an account. The information you enter is used in your browser to create your support sheet and is not stored by this MVP on a server.";
+  "This tool does not require an account. The information you enter is used in your browser to create your support sheet and is not saved as a server-side child profile.";
 
 const disclaimer =
   "This tool is for practical communication and educational support. It is not medical, legal, diagnostic, or therapeutic advice. You know your child best; edit anything that does not fit.";
@@ -438,7 +438,7 @@ export function generateSupportSheetOutputs(
     { title: "If Things Escalate", items: escalationPlan.length ? escalationPlan : ["reduce language, create space, and pause the demand when possible"] },
     { title: "Recovery and Afterward", items: recovery.length ? recovery : ["time to recover, reconnection without shame, and trying again later"] },
     {
-      title: "Parent / Caregiver Note",
+      title: "If Support Is Not Helping",
       items: withSectionNote(
         [contactNote || "Please contact me if support is not helping or safety becomes a concern."],
         sectionNotes.contactNote,

@@ -72,11 +72,13 @@ test.describe("PDA IEP Advice analyzer", () => {
     await page.getByLabel("Upload IEP or 504 PDF").setInputFiles(fixturePdf);
     await page.getByRole("button", { name: "Analyze document" }).click();
 
-    await expect(page.getByRole("heading", { name: "Complete security check" })).toBeVisible();
-    await page.getByRole("button", { name: "Complete security check" }).click();
+    await expect(page.getByRole("heading", { name: "Quick security check" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue" }).click();
 
-    await expect(page.getByText("PDA-aware score")).toBeVisible({ timeout: 15000 });
-    await expect(page.getByText("82 / 100")).toBeVisible();
+    await expect(page.getByText("PDA-aware review", { exact: true })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText("82 / 100")).toBeVisible({ timeout: 15000 });
     await expect(page.getByText("Reading Fluency")).toBeVisible();
   });
 
@@ -98,7 +100,7 @@ test.describe("PDA IEP Advice analyzer", () => {
     await page.goto("/tools/pda-iep-advice/analyze");
 
     await expect(
-      page.getByRole("heading", { name: "PDA IEP Advice: Analyze" }),
+      page.getByRole("heading", { name: "Review an IEP or 504 Plan" }),
     ).toBeVisible();
     await expect(
       page.getByText("If this helped you prepare for a school conversation"),
@@ -116,7 +118,9 @@ test.describe("PDA IEP Advice analyzer", () => {
     await expect(page.getByText("test_iep.pdf")).toBeVisible();
     await page.getByRole("button", { name: "Analyze document" }).click();
 
-    await expect(page.getByText("PDA-aware score")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText("PDA-aware review", { exact: true })).toBeVisible({
+      timeout: 15000,
+    });
     await expect(page.getByText("82 / 100")).toBeVisible();
     await expect(page.getByText(mockReport.summary)).toBeVisible();
     await expect(page.getByText("Reading goal needs reframing")).toBeVisible();

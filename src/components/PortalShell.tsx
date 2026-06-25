@@ -29,12 +29,11 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             <Sprout size={22} />
           </span>
           <span>PDA Family Tools</span>
-          <span className="tagline">Practical tools. Real relief.</span>
+          <span className="tagline">Less explaining. More usable support.</span>
         </Link>
         <nav className="topnav" aria-label="Main navigation">
           <Link href="/#tools">Tools</Link>
           <Link href="/about">About</Link>
-          <Link href="/migration-inventory">Migration</Link>
           <a
             className="donate-link"
             href={donationHref}
@@ -73,8 +72,8 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <div className="sidebar-note">
             <strong>Your privacy matters.</strong>
             <br />
-            Support Sheet Builder runs in your browser for this MVP. No account
-            or server-side child profile storage.
+            The Support Sheet Builder does not require an account, and it does
+            not save a child profile on the server.
           </div>
         </aside>
         <main className="main">{children}</main>
@@ -90,6 +89,7 @@ export function Footer() {
       <nav className="footer-links" aria-label="Resource links">
         <Link href="/privacy">Privacy</Link>
         <Link href="/terms">Terms</Link>
+        <Link href="/migration-inventory">How tools are built</Link>
         <a href="https://www.pdasociety.org.uk/" rel="noreferrer" target="_blank">
           PDA Society
         </a>

@@ -8,7 +8,7 @@ import { tools } from "@/lib/tools";
 export const metadata = createPageMetadata({
   title: "PDA Family Tools",
   description:
-    "Free, practical PDA-aware tools for families, caregivers, and school advocacy.",
+    "Free PDA-aware tools that help parents and caregivers explain less, prepare better, and share support that other adults can actually use.",
   path: "/",
 });
 
@@ -17,11 +17,11 @@ export default function HomePage() {
     <PortalShell>
       <section className="hero">
         <div>
-          <h1>Free PDA tools that reduce the explaining.</h1>
+          <h1>Free PDA tools for the moments when you need other adults to understand.</h1>
           <p>
-            A portal for practical, low-input tools that help families translate
-            demands, prepare school advocacy, review behavior reports, and share
-            one-page support guidance with the next adult.
+            Turn hard-to-say requests into lower-pressure language, make a
+            one-page support sheet, and prepare for school conversations without
+            starting from a blank page every time.
           </p>
           <div className="cta-row">
             <Link className="button button-primary" href="/tools/support-sheet-builder">
@@ -34,16 +34,16 @@ export default function HomePage() {
         </div>
         <div className="panel" style={{ boxShadow: "none" }}>
           <Sparkles color="var(--teal)" size={28} />
-          <h2>Output first, no daily loop.</h2>
+          <h2>Built for tired parents, not perfect paperwork.</h2>
           <p>
-            The MVP starts with a no-login Support Sheet Builder. Child details
-            stay in the browser, and the result is printable, editable, and
-            copyable.
+            These tools are meant for practical handoffs: something to say,
+            send, print, or bring into the next conversation.
           </p>
           <div className="notice">
             <ShieldCheck size={20} />
             <p style={{ margin: 0 }}>
-              No server-side child profile storage for Support Sheet Builder.
+              No account needed for the Support Sheet Builder. No saved child
+              profile on the server.
             </p>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function HomePage() {
 
       <section id="tools">
         <h2 className="page-title" style={{ fontSize: 38, marginTop: 36 }}>
-          Tools
+          What do you need help with today?
         </h2>
         <div className="tool-grid">
           {tools.map((tool) => (

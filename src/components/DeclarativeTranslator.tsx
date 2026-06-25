@@ -48,19 +48,19 @@ const MAX_HISTORY_ITEMS = 20;
 
 const examples = [
   {
-    label: "School example",
+    label: "School morning",
     text: "Get your backpack and shoes on so we can get ready for school.",
   },
   {
-    label: "Dinner example",
+    label: "Dinner time",
     text: "Please come down and wash your hands. It's dinner time.",
   },
   {
-    label: "Volume example",
+    label: "Loud moment",
     text: "You are being way too loud right now. Please stop.",
   },
   {
-    label: "Homework example",
+    label: "Homework",
     text: "You have a lot of homework tonight, so we need to get started now.",
   },
 ];
@@ -452,17 +452,18 @@ export function DeclarativeTranslator() {
   return (
     <div className="translator-layout">
       <section className="panel translator-panel">
-        <span className="status">Native MVP</span>
+        <span className="status">Words for right now</span>
         <h1 className="page-title" style={{ marginTop: 16 }}>
           Declarative Language Translator
         </h1>
         <p className="lede">
-          Turn a direct phrase into low-pressure wording that keeps the practical meaning intact.
+          Paste the sentence you were about to say and get a few lower-pressure
+          options that keep the real request intact.
         </p>
 
         <div className="form-stack">
           <div className="field">
-            <label htmlFor="caregiver-phrase">Caregiver phrase</label>
+            <label htmlFor="caregiver-phrase">What were you about to say?</label>
             <textarea
               data-ph-no-autocapture
               id="caregiver-phrase"
@@ -473,7 +474,7 @@ export function DeclarativeTranslator() {
                   handleGenerate();
                 }
               }}
-              placeholder="Example: Please come down and wash your hands. It's dinner time."
+              placeholder="Example: Please come down and wash your hands. It is dinner time."
               rows={4}
               value={text}
             />
@@ -578,7 +579,7 @@ export function DeclarativeTranslator() {
 
           {interestMissing ? (
             <p className="small-copy" role="status">
-              Add an interest to generate Interest Based ideas.
+              Add a real interest first, so the idea does not feel fake or manipulative.
             </p>
           ) : null}
         </div>
@@ -588,7 +589,7 @@ export function DeclarativeTranslator() {
           <p>
             Typed phrases are sent to the translator API and AI service to create wording.
             Recent translations stay in this browser only. Do not paste emergency, medical,
-            or confidential school records here.
+            legal, or confidential school records here.
           </p>
         </div>
       </section>
@@ -623,7 +624,7 @@ export function DeclarativeTranslator() {
           <div className="translator-empty">
             <MessageCircle size={24} aria-hidden="true" />
             <p>
-              Add a phrase on the left. The first useful set of alternatives will appear here.
+              Add a sentence on the left. The first usable options will appear here.
             </p>
           </div>
         ) : null}
@@ -745,8 +746,8 @@ export function DeclarativeTranslator() {
           <div className="history-card">
             <div className="sheet-toolbar">
               <div>
-                <h2>Recent Translations</h2>
-                <p className="small-copy">Saved locally in this browser.</p>
+                <h2>Recent wording ideas</h2>
+                <p className="small-copy">Saved locally in this browser only.</p>
               </div>
               <button className="icon-button" onClick={() => setShowHistory(false)} type="button">
                 <Check size={18} aria-hidden="true" />
@@ -769,7 +770,7 @@ export function DeclarativeTranslator() {
                 ))}
               </div>
             ) : (
-              <p className="small-copy">No recent translations yet.</p>
+              <p className="small-copy">No recent wording ideas yet.</p>
             )}
 
             {historyItems.length > 0 ? (

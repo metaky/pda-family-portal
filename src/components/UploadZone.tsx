@@ -50,8 +50,7 @@ export function UploadZone({
             <span>
               <strong>Upload IEP or 504 PDF</strong>
               <small>
-                Choose a school support document. The portal checks the file
-                before analysis.
+                Choose the school support document you want help reviewing.
               </small>
             </span>
           </span>
