@@ -16,6 +16,7 @@ export type ChildContext = {
 
 export type SupportSheetAnswers = {
   audience: AudienceKey;
+  tone?: SupportSheetToneKey;
   child: ChildContext;
   helps: string[];
   demands: string[];
@@ -27,6 +28,8 @@ export type SupportSheetAnswers = {
   customNotes: string;
   sectionNotes: Partial<Record<SupportSheetSectionKey, string>>;
 };
+
+export type SupportSheetToneKey = "warm" | "direct" | "brief";
 
 export type SupportSheetSectionKey =
   | "about"
@@ -102,6 +105,12 @@ export type SupportSheetContextPreset = {
     customNotes?: string;
     sectionNotes?: Partial<Record<SupportSheetSectionKey, string>>;
   };
+};
+
+export type SupportSheetToneOption = {
+  id: SupportSheetToneKey;
+  label: string;
+  description: string;
 };
 
 export const audienceOptions: AudienceOption[] = [
@@ -223,6 +232,24 @@ const audienceCopy: Record<
   },
 };
 
+export const supportSheetToneOptions: SupportSheetToneOption[] = [
+  {
+    id: "warm",
+    label: "Warm",
+    description: "Gentle, appreciative wording for people who respond well to context.",
+  },
+  {
+    id: "direct",
+    label: "Direct",
+    description: "Clear, practical wording for busy adults who need the bottom line.",
+  },
+  {
+    id: "brief",
+    label: "Brief",
+    description: "Shorter email and text versions for quick handoffs.",
+  },
+];
+
 export const helpOptions: OptionItem[] = [
   { id: "extra_processing_time", label: "Extra processing time", phrase: "extra processing time before answering or shifting tasks" },
   {
@@ -336,6 +363,7 @@ const disclaimer =
 
 export const defaultAnswers: SupportSheetAnswers = {
   audience: "teacher",
+  tone: "warm",
   child: {
     name: "Sam",
     pronouns: "they/them",
@@ -381,11 +409,43 @@ function firstName(name: string) {
   return name.trim() || "this child";
 }
 
+function emailIntro(
+  tone: SupportSheetToneKey,
+  name: string,
+  copy: (typeof audienceCopy)[AudienceKey],
+) {
+  if (tone === "brief") {
+    return `Quick handoff for ${name}: ${copy.emailContext}`;
+  }
+
+  if (tone === "direct") {
+    return `Practical handoff for ${name}: PDA can make ordinary demands feel threatening when ${name} feels rushed, watched, corrected, or out of control. ${copy.emailContext}`;
+  }
+
+  return `I wanted to share a short ${copy.emailGuide} for ${name}. PDA can mean that everyday demands sometimes register as a threat, especially when ${name} feels rushed, watched, corrected, or out of control. ${copy.emailContext}`;
+}
+
+function emailThanks(
+  tone: SupportSheetToneKey,
+  copy: (typeof audienceCopy)[AudienceKey],
+) {
+  if (tone === "brief") {
+    return "Thank you.";
+  }
+
+  if (tone === "direct") {
+    return "Thanks for using the supports that help.";
+  }
+
+  return copy.thanks;
+}
+
 export function generateSupportSheetOutputs(
   answers: SupportSheetAnswers,
 ): SupportSheetOutputs {
   const audience = getAudience(answers.audience);
   const copy = audienceCopy[answers.audience] ?? audienceCopy.custom;
+  const tone = answers.tone ?? "warm";
   const name = firstName(answers.child.name);
   const connection = answers.child.connectionPoints.trim();
   const customNotes = answers.customNotes.trim();
@@ -449,7 +509,7 @@ export function generateSupportSheetOutputs(
   const email = [
     `Hi,`,
     ``,
-    `I wanted to share a short ${copy.emailGuide} for ${name}. PDA can mean that everyday demands sometimes register as a threat, especially when ${name} feels rushed, watched, corrected, or out of control. ${copy.emailContext}`,
+    emailIntro(tone, name, copy),
     ``,
     `${name} connects through: ${connection || "connection, trust, and low-pressure support."}`,
     ``,
@@ -462,16 +522,19 @@ export function generateSupportSheetOutputs(
     ``,
     contactNote || `If things are getting hard, please contact me so we can help ${name} recover without shame.`,
     ``,
-    copy.thanks,
+    emailThanks(tone, copy),
     ``,
     `Created with the free PDA Support Sheet Builder.`,
   ].join("\n");
 
-  const shortText = `Quick note for ${copy.shortContext} with ${name}: direct pressure can feel much bigger than it looks, so ${listSentence(
-    helps.slice(0, 3),
-  ) || "choices, extra time, and indirect language"} usually work better. If ${name} gets stuck, please ${
-    listSentence(escalationPlan.slice(0, 3)) || "reduce language, give space, and pause the demand"
-  }. Avoid turning it into a power struggle. ${contactNote || "Please call/text me if things are escalating."}`;
+  const shortText =
+    tone === "brief"
+      ? `Brief note for ${copy.shortContext} with ${name}: ${listSentence(helps.slice(0, 2)) || "choices and extra time"} help. If stuck, ${listSentence(escalationPlan.slice(0, 2)) || "reduce language and pause the demand"}. ${contactNote || "Please call/text me if things escalate."}`
+      : `Quick note for ${copy.shortContext} with ${name}: direct pressure can feel much bigger than it looks, so ${listSentence(
+          helps.slice(0, 3),
+        ) || "choices, extra time, and indirect language"} usually work better. If ${name} gets stuck, please ${
+          listSentence(escalationPlan.slice(0, 3)) || "reduce language, give space, and pause the demand"
+        }. Avoid turning it into a power struggle. ${contactNote || "Please call/text me if things are escalating."}`;
 
   return {
     sheet: {

@@ -523,7 +523,7 @@ Goal: Improve output quality without turning the product into a tracker, dashboa
 - [ ] Add optional "help me word this better" assistance only after template-first behavior is solid.
 - [x] Add stronger audience-specific template variations.
 - [x] Add optional school-year, appointment, or activity-context presets.
-- [ ] Add user-editable tone controls if they improve output without adding complexity.
+- [x] Add user-editable tone controls if they improve output without adding complexity.
 
 Verification:
 
@@ -533,7 +533,7 @@ Verification:
 - [ ] Browser check local-only behavior.
 - [ ] Use `$playwright-interactive` for local-storage/privacy-state QA when local-only saving is added.
 - [x] Confirm no server-side Support Sheet Builder storage was introduced.
-- [ ] Confirm new personalization options do not make the first useful output slower or more demanding.
+- [x] Confirm new personalization options do not make the first useful output slower or more demanding.
 
 ## Current Best Next Build
 

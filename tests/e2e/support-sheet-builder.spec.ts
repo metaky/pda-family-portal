@@ -120,6 +120,21 @@ test.describe("Support Sheet Builder", () => {
     );
   });
 
+  test("tone controls adjust generated email and short text", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium", "desktop tone control check only");
+
+    await page.goto("/tools/support-sheet-builder");
+    await page.getByLabel("Child name or nickname").fill("Taylor");
+    await page.getByRole("button", { name: /^Brief$/ }).click();
+    await page.getByRole("button", { name: /Generate support sheet/i }).click();
+
+    await page.getByRole("tab", { name: "Email" }).click();
+    await expect(page.locator(".copy-box")).toHaveValue(/Quick handoff for Taylor/);
+
+    await page.getByRole("tab", { name: "Short text" }).click();
+    await expect(page.locator(".copy-box")).toHaveValue(/Brief note for the school day with Taylor/);
+  });
+
   test("print output fits common one-page paper sizes", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "chromium", "desktop print layout check only");
 
