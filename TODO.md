@@ -484,11 +484,12 @@ Google Cloud deployment handoff:
 - [x] Create a least-privilege Cloud Run runtime service account.
 - [x] Add `GEMINI_API_KEY` and `SESSION_SIGNING_SECRET` to Secret Manager and grant the Cloud Run runtime service account secret access.
 - [ ] Add Cloudflare Turnstile production site/secret keys before enabling upload-backed AI routes publicly.
-- [ ] Create Cloud Build trigger after the GitHub repository and preferred production branch are confirmed.
+- [x] Create Cloud Build trigger after the GitHub repository and preferred production branch are confirmed.
 - [x] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
 - [x] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
 - [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-pdlcgpcnga-uw.a.run.app`.
 - [x] Deploy merged Phase 8 tone controls to Cloud Run revision `pda-family-tools-portal-00004-8vd` from commit `0d6b7b2`.
+- [x] Connect GitHub repository `metaky/pda-family-portal` to Cloud Build and create trigger `pda-family-portal-main-deploy` for pushes to `main`.
 - [x] Decide whether to add a custom domain: defer until later.
 
 Resume commands once billing approval is confirmed:
@@ -511,7 +512,7 @@ Verification:
 - [x] Use browser automation for final launch visual QA on desktop and mobile.
 - [x] Run a threat model or security scan for upload, AI, analytics, and deployment surfaces.
 - [x] Check canonical URLs in page metadata.
-- [ ] Check old URLs route to bridge or redirect pages when ready.
+- [x] Check old URLs route to bridge or redirect pages when ready: no old domains should point to this portal for now, so no redirect/bridge execution is needed.
 - [x] Confirm analytics payloads are privacy-safe.
 - [x] Confirm donation links work.
 
@@ -541,11 +542,11 @@ Verification:
 Recommended next task:
 
 1. Add Cloudflare Turnstile production keys before enabling upload-backed AI routes publicly.
-2. Create the Cloud Build trigger for automatic `main` deployments once GitHub/Google authorization is confirmed.
-3. Decide and execute old URL bridge or redirect handling for the standalone tools.
+2. Keep upload-backed AI routes disabled until Turnstile is configured and production-smoke-tested.
+3. Revisit custom domain setup later when the preferred public domain is chosen.
 
 Why:
 
 - These are the remaining launch-readiness tasks that depend on external service configuration.
 - They keep production safe while the upload-backed AI tools wait behind feature flags.
-- They close continuity gaps for people who may still find the older standalone URLs.
+- Old standalone domains do not need to point here right now, so redirect work is no longer a launch blocker.
