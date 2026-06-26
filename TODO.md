@@ -210,8 +210,8 @@ Verification:
 
 Remaining cleanup:
 
-- [ ] Decide whether placeholder tool routes should include temporary bridge links to current live tools before public launch.
-- [ ] Add any missing canonical metadata once deployment URL is known.
+- [x] Decide whether placeholder tool routes should include temporary bridge links to current live tools before public launch: no placeholder bridge links are needed for MVP routes now that the initial tools have native portal pages; old URL continuity is tracked in Phase 7.
+- [x] Add any missing canonical metadata once deployment URL is known.
 
 ## Phase 2: Support Sheet Builder MVP
 
@@ -469,8 +469,8 @@ Goal: Make the portal ready to be the canonical home without losing continuity f
 - [x] Create bridge/redirect plan for old behavior report URLs.
 - [x] Add basic error monitoring plan.
 - [x] Add maintenance-mode or feature-unavailable pattern if migrated AI/API features are temporarily unavailable.
-- [ ] Configure Google Cloud project, Artifact Registry, Cloud Build trigger, Cloud Run service account, and Secret Manager secrets.
-- [ ] Deploy to Cloud Run with final `NEXT_PUBLIC_SITE_URL` and production secrets.
+- [x] Configure Google Cloud project, Artifact Registry, Cloud Run service account, and Secret Manager secrets for the currently enabled production features.
+- [x] Deploy to Cloud Run with final `NEXT_PUBLIC_SITE_URL` and current production secrets, keeping upload-backed AI routes disabled until Turnstile production keys are added.
 
 Google Cloud deployment handoff:
 
@@ -488,6 +488,7 @@ Google Cloud deployment handoff:
 - [x] Deploy the service to Cloud Run from the existing `cloudbuild.yaml`.
 - [x] Set production public environment variables during deploy, including `NEXT_PUBLIC_SITE_URL` and the public donation URLs.
 - [x] Verify the deployed Cloud Run URL: `https://pda-family-tools-portal-pdlcgpcnga-uw.a.run.app`.
+- [x] Deploy merged Phase 8 tone controls to Cloud Run revision `pda-family-tools-portal-00004-8vd` from commit `0d6b7b2`.
 - [x] Decide whether to add a custom domain: defer until later.
 
 Resume commands once billing approval is confirmed:
@@ -539,13 +540,12 @@ Verification:
 
 Recommended next task:
 
-1. Improve Support Sheet Builder output quality before migrating heavier AI/upload features.
-2. Start with audience-specific template wording and public example sheets.
-3. Add browser-level tests for the builder flow.
+1. Add Cloudflare Turnstile production keys before enabling upload-backed AI routes publicly.
+2. Create the Cloud Build trigger for automatic `main` deployments once GitHub/Google authorization is confirmed.
+3. Decide and execute old URL bridge or redirect handling for the standalone tools.
 
 Why:
 
-- It strengthens the tool that is already native in the portal.
-- It improves shareability before launch.
-- It creates a stronger design/content pattern for later migrated tools.
-- It avoids jumping into the heavier upload/AI migrations before the new portal's first tool feels genuinely useful.
+- These are the remaining launch-readiness tasks that depend on external service configuration.
+- They keep production safe while the upload-backed AI tools wait behind feature flags.
+- They close continuity gaps for people who may still find the older standalone URLs.
